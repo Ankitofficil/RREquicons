@@ -41,13 +41,14 @@ function MegaDropdown({
   return (
     <div className="relative" onMouseEnter={onToggle} onMouseLeave={onClose}>
       <button
+        onClick={onToggle}
         className="flex items-center gap-1 text-[13px] font-semibold text-white/80 hover:text-white tracking-wide uppercase transition-colors py-2"
       >
         {label}
         <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-300 ${open ? "rotate-180" : ""}`} />
       </button>
       <div
-        className={`absolute top-full left-1/2 -translate-x-1/2 mt-2 w-72 origin-top transition-all duration-300 ${
+        className={`absolute top-full left-1/2 -translate-x-1/2 pt-2 w-72 origin-top transition-all duration-300 ${
           open ? "opacity-100 scale-100 translate-y-0" : "opacity-0 scale-95 -translate-y-2 pointer-events-none"
         }`}
       >
