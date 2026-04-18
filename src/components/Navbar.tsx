@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useState, useEffect } from "react";
 import { Menu, X, ChevronDown, Phone, ArrowRight } from "lucide-react";
 
@@ -106,14 +107,16 @@ export default function Navbar() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16 sm:h-18">
             {/* Logo */}
-            <Link href="/" className="flex items-center gap-2.5 sm:gap-3 shrink-0 group">
-              <div className="relative w-10 h-10 sm:w-11 sm:h-11 bg-gradient-to-br from-accent to-accent-dark rounded-xl flex items-center justify-center font-black text-white text-base sm:text-lg shadow-lg shadow-accent/20 group-hover:shadow-accent/40 transition-shadow">
-                RR
-                <div className="absolute -inset-[1px] rounded-xl bg-gradient-to-br from-accent-light to-accent opacity-0 group-hover:opacity-100 transition-opacity -z-10 blur-sm" />
-              </div>
-              <div className="hidden sm:block">
-                <div className="text-white font-bold text-lg leading-tight tracking-tight">R R Equicons</div>
-                <div className="text-accent/70 text-[9px] tracking-[0.2em] uppercase font-semibold">Private Limited</div>
+            <Link href="/" className="flex items-center shrink-0 group">
+              <div className="bg-white rounded-xl px-2.5 py-1.5 sm:px-3 sm:py-2 shadow-lg shadow-black/10 group-hover:shadow-accent/20 transition-shadow">
+                <Image
+                  src="/rr-equicons-hq.png"
+                  alt="R R Equicons Pvt Ltd"
+                  width={540}
+                  height={400}
+                  priority
+                  className="h-8 sm:h-10 w-auto"
+                />
               </div>
             </Link>
 

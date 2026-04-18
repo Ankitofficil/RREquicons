@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { MapPin, Phone, Mail, ArrowRight } from "lucide-react";
 
 const socialLinks = [
@@ -41,14 +42,14 @@ export default function Footer() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-12">
             {/* About */}
             <div className="lg:col-span-1">
-              <div className="flex items-center gap-3 mb-5">
-                <div className="w-11 h-11 bg-gradient-to-br from-accent to-accent-dark rounded-xl flex items-center justify-center font-black text-white text-lg shadow-lg shadow-accent/20">
-                  RR
-                </div>
-                <div>
-                  <div className="font-bold text-lg text-white">R R Equicons</div>
-                  <div className="text-accent/60 text-[9px] tracking-[0.2em] uppercase font-semibold">Pvt Ltd</div>
-                </div>
+              <div className="inline-block bg-white rounded-xl px-3 py-2 mb-5 shadow-lg shadow-black/20">
+                <Image
+                  src="/rr-equicons-hq.png"
+                  alt="R R Equicons Pvt Ltd"
+                  width={540}
+                  height={400}
+                  className="h-12 w-auto"
+                />
               </div>
               <p className="text-white/40 text-sm leading-relaxed mb-6">
                 A leading civil engineering and construction company headquartered in Jamshedpur, delivering EPC, RMC, and infrastructure solutions across India since 2013.
