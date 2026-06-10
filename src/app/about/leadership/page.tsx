@@ -16,12 +16,6 @@ const directors = [
     bio: "With a strong background in civil engineering and construction management, Mr. Shubham Kamal provides strategic direction and oversees the company's growth trajectory. His hands-on approach ensures that every project meets R R Equicons' exacting standards.",
     gradient: "from-blue-600/30 to-blue-900/40",
   },
-  {
-    name: "Ms. Vandana Mishra",
-    role: "Director",
-    bio: "Ms. Vandana Mishra brings operational expertise and a keen eye for detail to the company's management. Her leadership in finance, compliance, and administration has been instrumental in building R R Equicons into a trusted name in the industry.",
-    gradient: "from-emerald-600/30 to-emerald-900/40",
-  },
 ];
 
 const managementRoles = [

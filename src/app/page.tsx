@@ -84,7 +84,7 @@ const featuredProjects = [
   { name: "Industrial Complex - Adityapur", location: "Jamshedpur", scope: "Multi-building EPC", status: "Completed", color: "from-emerald-600/30 to-emerald-900/40" },
   { name: "Residential Township - Phase I", location: "Jamshedpur", scope: "120 Unit Housing", status: "Ongoing", color: "from-amber-600/30 to-amber-900/40" },
   { name: "Bridge Construction - Subarnarekha", location: "Jharkhand", scope: "RCC Bridge - 180m", status: "Completed", color: "from-purple-600/30 to-purple-900/40" },
-  { name: "Batching Plant Setup", location: "Gamharia", scope: "30 cum/hr RMC Plant", status: "Completed", color: "from-rose-600/30 to-rose-900/40" },
+  { name: "Batching Plant Setup", location: "Gamharia", scope: "60 m³/hr RMC Plant", status: "Completed", color: "from-rose-600/30 to-rose-900/40" },
   { name: "Commercial Office Complex", location: "Bistupur", scope: "G+5 Commercial Building", status: "Ongoing", color: "from-cyan-600/30 to-cyan-900/40" },
 ];
 

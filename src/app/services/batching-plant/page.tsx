@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 
 const capabilities = [
   { label: "Grades", value: "M10 through M60+ (custom mix designs available)" },
-  { label: "Output", value: "30 cum/hour capacity" },
+  { label: "Output", value: "60 m³/hour capacity" },
   { label: "Quality Control", value: "In-house lab with cube testing, slump testing, aggregate analysis" },
   { label: "Logistics", value: "Owned transit mixer fleet for on-time delivery within Jamshedpur region" },
 ];

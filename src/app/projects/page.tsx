@@ -21,7 +21,7 @@ const projects = [
   { name: "Industrial Complex - Adityapur", client: "Private Industrial Group", location: "Jamshedpur", scope: "Multi-building EPC for manufacturing facility", category: "Industrial", status: "Completed", year: "2022" },
   { name: "Residential Township Phase I", client: "Real Estate Developer", location: "Jamshedpur", scope: "120 Unit residential housing", category: "Residential", status: "Ongoing", year: "2024" },
   { name: "Bridge Construction - Subarnarekha", client: "State PWD", location: "Jharkhand", scope: "RCC Bridge - 180m span", category: "EPC", status: "Completed", year: "2021" },
-  { name: "Batching Plant Operations", client: "Internal / Multi-client", location: "Gamharia", scope: "30 cum/hr RMC Plant setup & operations", category: "Industrial", status: "Completed", year: "2020" },
+  { name: "Batching Plant Operations", client: "Internal / Multi-client", location: "Gamharia", scope: "60 m³/hr RMC Plant setup & operations", category: "Industrial", status: "Completed", year: "2020" },
   { name: "Commercial Office Complex", client: "Private Developer", location: "Bistupur", scope: "G+5 Commercial Building", category: "Buildings", status: "Ongoing", year: "2025" },
   { name: "District Road Upgrade", client: "State Rural Development", location: "Bihar", scope: "15 km road widening & resurfacing", category: "Roads & Highways", status: "Completed", year: "2023" },
   { name: "Temple Complex Construction", client: "Religious Trust", location: "Deoghar, Jharkhand", scope: "Multi-structure religious campus", category: "Institutional", status: "Completed", year: "2022" },
