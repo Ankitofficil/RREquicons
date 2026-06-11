@@ -119,7 +119,7 @@ export default function CareersPage() {
           <ScrollReveal delay={600}>
             <div id="apply" className="card-premium p-5 sm:p-10 !shadow-2xl !shadow-black/5">
               <h3 className="text-xl font-black text-primary-dark mb-6">Submit Application</h3>
-              <ContactForm fields={applicationFields} submitLabel="Submit Application" />
+              <ContactForm fields={applicationFields} submitLabel="Submit Application" source="Careers Application" />
             </div>
           </ScrollReveal>
         </div>

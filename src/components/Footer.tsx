@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { MapPin, Phone, Mail, ArrowRight } from "lucide-react";
+import { site } from "@/lib/site";
 
 const socialLinks = [
   { label: "Li", title: "LinkedIn", href: "#" },
@@ -122,7 +123,7 @@ export default function Footer() {
                 </li>
                 <li className="flex items-center gap-3 text-sm text-white/40">
                   <Phone className="w-4 h-4 text-accent/60 shrink-0" />
-                  <span>+91 XXXXX XXXXX</span>
+                  <span>{site.phone}</span>
                 </li>
                 <li className="flex items-center gap-3 text-sm text-white/40">
                   <Mail className="w-4 h-4 text-accent/60 shrink-0" />

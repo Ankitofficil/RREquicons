@@ -69,7 +69,7 @@ export default function RealEstatePage() {
                 <Bell className="w-5 h-5 text-accent" />
                 <h3 className="text-lg font-black text-primary-dark">Register Your Interest</h3>
               </div>
-              <ContactForm fields={interestFields} submitLabel="Notify Me About Launches" compact />
+              <ContactForm fields={interestFields} submitLabel="Notify Me About Launches" compact source="Real Estate Interest" />
             </div>
           </ScrollReveal>
         </div>

@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Truck, Package, MapPin, ArrowRight } from "lucide-react";
 import HeroSection from "@/components/HeroSection";
-import SectionHeading from "@/components/SectionHeading";
 import ScrollReveal from "@/components/ScrollReveal";
 
 export const metadata: Metadata = {

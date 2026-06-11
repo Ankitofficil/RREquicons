@@ -4,6 +4,7 @@ import HeroSection from "@/components/HeroSection";
 import SectionHeading from "@/components/SectionHeading";
 import ContactForm from "@/components/ContactForm";
 import ScrollReveal from "@/components/ScrollReveal";
+import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Contact R R Equicons Pvt Ltd | Construction Company in Jamshedpur",
@@ -20,7 +21,7 @@ const contactCards = [
   {
     icon: Phone,
     title: "Call Us",
-    lines: ["+91 XXXXX XXXXX", "Mon-Sat, 9:30 AM - 6:30 PM IST"],
+    lines: [site.phone, "Mon-Sat, 9:30 AM - 6:30 PM IST"],
     color: "from-emerald-500/10 to-emerald-600/5",
   },
   {
@@ -82,7 +83,7 @@ export default function ContactPage() {
               <ScrollReveal>
                 <div className="card-premium p-5 sm:p-8 !shadow-2xl !shadow-black/5">
                   <SectionHeading title="Send Us a Message" tag="Get in Touch" centered={false} />
-                  <ContactForm fields={formFields} />
+                  <ContactForm fields={formFields} source="Contact" />
                 </div>
               </ScrollReveal>
             </div>

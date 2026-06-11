@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Send, CheckCircle } from "lucide-react";
+import { Send, CheckCircle, Loader2, AlertCircle } from "lucide-react";
 
 interface Field {
   name: string;
@@ -16,21 +16,58 @@ interface ContactFormProps {
   fields: Field[];
   submitLabel?: string;
   compact?: boolean;
+  /** Identifies which form/page the submission came from (e.g. "Contact", "Careers"). */
+  source?: string;
 }
 
-export default function ContactForm({ fields, submitLabel = "Send Message", compact = false }: ContactFormProps) {
-  const [submitted, setSubmitted] = useState(false);
+type Status = "idle" | "sending" | "success" | "error";
 
-  const handleSubmit = (e: React.FormEvent) => {
+export default function ContactForm({
+  fields,
+  submitLabel = "Send Message",
+  compact = false,
+  source,
+}: ContactFormProps) {
+  const [status, setStatus] = useState<Status>("idle");
+  const [error, setError] = useState<string | null>(null);
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setSubmitted(true);
-    setTimeout(() => setSubmitted(false), 3000);
+    if (status === "sending") return;
+
+    const form = e.currentTarget;
+    const payload = Object.fromEntries(new FormData(form).entries());
+    if (source) payload.source = source;
+
+    setStatus("sending");
+    setError(null);
+
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      if (!res.ok) {
+        const data = await res.json().catch(() => null);
+        throw new Error(data?.error ?? "Something went wrong. Please try again.");
+      }
+
+      setStatus("success");
+      form.reset();
+      setTimeout(() => setStatus("idle"), 5000);
+    } catch (err) {
+      setStatus("error");
+      setError(err instanceof Error ? err.message : "Something went wrong. Please try again.");
+    }
   };
 
-  const inputClasses = "w-full px-4 py-3 rounded-xl border-2 border-gray-100 focus:border-accent focus:ring-4 focus:ring-accent/10 outline-none transition-all text-sm bg-white placeholder:text-text-muted/50";
+  const inputClasses =
+    "w-full px-4 py-3 rounded-xl border-2 border-gray-100 focus:border-accent focus:ring-4 focus:ring-accent/10 outline-none transition-all text-sm bg-white placeholder:text-text-muted/50";
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-5">
+    <form onSubmit={handleSubmit} className="space-y-5" noValidate>
       <div className={`grid ${compact ? "grid-cols-1" : "grid-cols-1 sm:grid-cols-2"} gap-5`}>
         {fields.map((field) => (
           <div
@@ -68,14 +105,38 @@ export default function ContactForm({ fields, submitLabel = "Send Message", comp
           </div>
         ))}
       </div>
+
+      {/* Honeypot — hidden from users, bots tend to fill it. */}
+      <div className="absolute -left-[9999px]" aria-hidden="true">
+        <label>
+          Website
+          <input type="text" name="website" tabIndex={-1} autoComplete="off" />
+        </label>
+      </div>
+
+      {status === "error" && error && (
+        <p className="flex items-center gap-2 text-sm text-red-600" role="alert">
+          <AlertCircle className="w-4 h-4 shrink-0" />
+          {error}
+        </p>
+      )}
+
       <button
         type="submit"
-        className={`btn-primary flex items-center gap-2.5 text-sm ${submitted ? "!bg-success !shadow-success/30" : ""}`}
+        disabled={status === "sending"}
+        className={`btn-primary flex items-center gap-2.5 text-sm disabled:opacity-70 disabled:cursor-not-allowed ${
+          status === "success" ? "!bg-success !shadow-success/30" : ""
+        }`}
       >
-        {submitted ? (
+        {status === "success" ? (
           <>
             <CheckCircle className="w-4 h-4" />
             Sent Successfully!
+          </>
+        ) : status === "sending" ? (
+          <>
+            <Loader2 className="w-4 h-4 animate-spin" />
+            Sending…
           </>
         ) : (
           <>
