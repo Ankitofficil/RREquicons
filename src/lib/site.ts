@@ -2,12 +2,11 @@
 // Update the placeholder phone number here and it propagates everywhere.
 
 // ─── PHONE ───
-// TODO: Replace the placeholder below with the real number.
 //   • phoneDisplay  — shown to users (any formatting you like)
 //   • phoneE164     — digits only, with country code, NO "+", spaces, or dashes.
 //                     WhatsApp + tel: links are built from this. e.g. "919876543210"
-const phoneDisplay = "+91 XXXXX XXXXX";
-const phoneE164 = "91XXXXXXXXXX"; // ← replace X's; used for wa.me / tel: links
+const phoneDisplay = "+91 84570 04176";
+const phoneE164 = "918457004176"; // used for wa.me / tel: links
 
 export const site = {
   name: "R R Equicons Pvt Ltd",
