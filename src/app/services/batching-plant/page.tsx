@@ -158,7 +158,7 @@ export default function BatchingPlantPage() {
             {whyChoose.map((item, i) => (
               <ScrollReveal key={i} delay={i * 100}>
                 <div className={`card-premium flex gap-4 p-6 bg-gradient-to-br ${item.color} h-full`}>
-                  <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center shrink-0 shadow-sm">
+                  <div className="w-12 h-12 bg-white dark:bg-white/10 rounded-xl flex items-center justify-center shrink-0 shadow-sm">
                     <item.icon className="w-6 h-6 text-primary" />
                   </div>
                   <div>

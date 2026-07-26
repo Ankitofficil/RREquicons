@@ -121,12 +121,6 @@ body {
 .dark .text-primary-dark {
   color: #f1f5fb !important;
 }
-/* …but keep the navy icon glyphs visible on the white icon-plates that stay white
-   in dark mode (logo chips, card icon tiles): re-darken text-primary inside a
-   literal white chip. */
-.dark .bg-white .text-primary {
-  color: #0c2340 !important;
-}
 
 /* ─── Glassmorphism ─── */
 .glass {

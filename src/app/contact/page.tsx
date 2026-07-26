@@ -69,7 +69,7 @@ export default function ContactPage() {
             {contactCards.map((card, i) => {
               const inner = (
                 <>
-                  <div className={`w-12 h-12 rounded-xl flex items-center justify-center mb-4 shadow-sm ${card.accent ? "bg-[#25D366]" : "bg-white"}`}>
+                  <div className={`w-12 h-12 rounded-xl flex items-center justify-center mb-4 shadow-sm ${card.accent ? "bg-[#25D366]" : "bg-white dark:bg-white/10"}`}>
                     <card.icon className={`w-6 h-6 ${card.accent ? "text-white" : "text-primary"}`} />
                   </div>
                   <h3 className="font-bold text-primary-dark mb-3 flex items-center gap-1.5">

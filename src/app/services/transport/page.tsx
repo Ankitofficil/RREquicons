@@ -30,7 +30,7 @@ export default function TransportPage() {
             <ScrollReveal>
               <div className="card-premium p-6 bg-gradient-to-br from-blue-500/10 to-blue-600/5 h-full">
                 <div className="flex items-center gap-3 mb-5">
-                  <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center shadow-sm">
+                  <div className="w-10 h-10 bg-white dark:bg-white/10 rounded-xl flex items-center justify-center shadow-sm">
                     <Truck className="w-5 h-5 text-primary" />
                   </div>
                   <h3 className="text-lg font-black text-primary-dark">Our Fleet</h3>
@@ -47,7 +47,7 @@ export default function TransportPage() {
             <ScrollReveal delay={150}>
               <div className="card-premium p-6 bg-gradient-to-br from-emerald-500/10 to-emerald-600/5 h-full">
                 <div className="flex items-center gap-3 mb-5">
-                  <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center shadow-sm">
+                  <div className="w-10 h-10 bg-white dark:bg-white/10 rounded-xl flex items-center justify-center shadow-sm">
                     <Package className="w-5 h-5 text-primary" />
                   </div>
                   <h3 className="text-lg font-black text-primary-dark">What We Move</h3>

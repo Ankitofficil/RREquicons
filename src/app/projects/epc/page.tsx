@@ -92,7 +92,7 @@ export default function EPCPage() {
             {process.map((p, i) => (
               <ScrollReveal key={i} delay={i * 120}>
                 <div className={`card-premium text-center p-6 bg-gradient-to-br ${p.color}`}>
-                  <div className="w-16 h-16 bg-white rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-sm">
+                  <div className="w-16 h-16 bg-white dark:bg-white/10 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-sm">
                     <p.icon className="w-7 h-7 text-primary" />
                   </div>
                   <div className="text-[10px] font-black text-accent mb-1 tracking-[0.2em]">STEP {p.step}</div>

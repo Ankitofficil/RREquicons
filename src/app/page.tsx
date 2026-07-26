@@ -337,7 +337,7 @@ export default function HomePage() {
                       Flagship
                     </span>
                   )}
-                  <div className="w-14 h-14 bg-white rounded-xl flex items-center justify-center mb-5 shadow-sm group-hover:shadow-md group-hover:scale-105 transition-all">
+                  <div className="w-14 h-14 bg-white dark:bg-white/10 rounded-xl flex items-center justify-center mb-5 shadow-sm group-hover:shadow-md group-hover:scale-105 transition-all">
                     <service.icon className={`w-7 h-7 ${service.featured ? "text-accent" : "text-primary"}`} />
                   </div>
                   <h3 className="font-bold text-lg text-text mb-2">{service.title}</h3>

@@ -33,7 +33,7 @@ export default function EquipmentPage() {
               <ScrollReveal key={i} delay={i * 120}>
                 <div className={`card-premium p-7 h-full bg-gradient-to-br ${cat.color}`}>
                   <div className="flex items-center gap-3 mb-5">
-                    <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center shadow-sm">
+                    <div className="w-12 h-12 bg-white dark:bg-white/10 rounded-xl flex items-center justify-center shadow-sm">
                       <cat.icon className="w-6 h-6 text-primary" />
                     </div>
                     <h3 className="text-lg font-black text-primary-dark">{cat.title}</h3>
