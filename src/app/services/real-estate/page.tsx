@@ -29,7 +29,7 @@ export default function RealEstatePage() {
     <>
       <HeroSection title="Building Spaces Where Lives Happen." compact />
 
-      <section className="py-14 sm:py-24 bg-white construction-grid">
+      <section className="py-14 sm:py-24 bg-page construction-grid">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <ScrollReveal>
             <p className="text-text-light leading-relaxed text-lg mb-14">

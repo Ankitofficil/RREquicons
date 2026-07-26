@@ -22,7 +22,7 @@ export default function VisionMissionPage() {
     <>
       <HeroSection title="Vision, Mission & Values" compact />
 
-      <section className="py-14 sm:py-24 bg-white construction-grid">
+      <section className="py-14 sm:py-24 bg-page construction-grid">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-20">
           <ScrollReveal>
             <div className="flex gap-6">

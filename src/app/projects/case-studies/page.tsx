@@ -64,7 +64,7 @@ export default function CaseStudiesPage() {
         compact
       />
 
-      <section className="py-14 sm:py-24 bg-white construction-grid">
+      <section className="py-14 sm:py-24 bg-page construction-grid">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6 sm:space-y-10">
           {caseStudies.map((cs, i) => (
             <ScrollReveal key={i} delay={i * 100}>

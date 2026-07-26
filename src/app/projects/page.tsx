@@ -43,7 +43,7 @@ export default function ProjectsPage() {
         compact
       />
 
-      <section className="py-14 sm:py-24 bg-white construction-grid">
+      <section className="py-14 sm:py-24 bg-page construction-grid">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Filter */}
           <div className="flex flex-wrap gap-1.5 sm:gap-2 justify-center mb-8 sm:mb-12">

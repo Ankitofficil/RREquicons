@@ -35,7 +35,7 @@ export default function InsightsPage() {
         compact
       />
 
-      <section className="py-14 sm:py-24 bg-white construction-grid">
+      <section className="py-14 sm:py-24 bg-page construction-grid">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-wrap gap-1.5 sm:gap-2 justify-center mb-8 sm:mb-12">
             {categories.map((cat) => (

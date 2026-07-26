@@ -1,10 +1,30 @@
 // Single source of truth for company contact details.
 // Update the placeholder phone number here and it propagates everywhere.
 
+// ─── PHONE ───
+// TODO: Replace the placeholder below with the real number.
+//   • phoneDisplay  — shown to users (any formatting you like)
+//   • phoneE164     — digits only, with country code, NO "+", spaces, or dashes.
+//                     WhatsApp + tel: links are built from this. e.g. "919876543210"
+const phoneDisplay = "+91 XXXXX XXXXX";
+const phoneE164 = "91XXXXXXXXXX"; // ← replace X's; used for wa.me / tel: links
+
 export const site = {
   name: "R R Equicons Pvt Ltd",
-  // TODO: replace with the real number — used in Contact page and Footer.
-  phone: "+91 XXXXX XXXXX",
+  tagline: "Ready-Mix Concrete & Civil Construction",
+  phone: phoneDisplay,
+  phoneE164,
+  // Pre-filled WhatsApp message so enquiries arrive with context.
+  whatsapp: {
+    href: `https://wa.me/${phoneE164}?text=${encodeURIComponent(
+      "Hi R R Equicons, I'd like to enquire about your Ready-Mix Concrete / construction services."
+    )}`,
+    // A version used on the RMC page CTA.
+    rmcHref: `https://wa.me/${phoneE164}?text=${encodeURIComponent(
+      "Hi R R Equicons, I'd like a quote for Ready-Mix Concrete (RMC). Grade / quantity / site location: "
+    )}`,
+  },
+  telHref: `tel:+${phoneE164}`,
   email: {
     general: "info@rrequiconspvtltd.com",
     careers: "careers@rrequiconspvtltd.com",

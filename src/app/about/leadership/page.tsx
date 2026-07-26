@@ -33,7 +33,7 @@ export default function LeadershipPage() {
     <>
       <HeroSection title="The People Behind the Projects." compact />
 
-      <section className="py-14 sm:py-24 bg-white construction-grid">
+      <section className="py-14 sm:py-24 bg-page construction-grid">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <ScrollReveal>
             <p className="text-text-light leading-relaxed text-lg mb-14">

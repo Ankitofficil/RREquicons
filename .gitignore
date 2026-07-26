@@ -34,3 +34,6 @@ next-env.d.ts
 
 # screenshots (dev only)
 screenshots/
+
+# local dev server log
+dev.log

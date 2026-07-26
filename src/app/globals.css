@@ -1,5 +1,10 @@
 @import "tailwindcss";
 
+/* Class-based dark mode: toggling `.dark` on <html> flips the theme.
+   (Tailwind v4 defaults `dark:` to prefers-color-scheme; this overrides that
+   so the manual toggle wins.) */
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme inline {
   --color-primary: #0c2340;
   --color-primary-light: #1a4480;
@@ -16,9 +21,36 @@
   --color-success: #10b981;
   --color-danger: #ef4444;
   --color-glass: rgba(255, 255, 255, 0.08);
+  /* Page background token (distinct from --color-white so `text-white`/`bg-white`
+     literals — logo chips, dark-section text — stay truly white in both themes). */
+  --color-page: #ffffff;
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
+
+/* ─── Dark theme: deep-navy reskin ───
+   Redefines only the light-oriented surface/text tokens. Brand accents
+   (primary, accent/red, success, danger) stay constant across both themes.
+   Because body + most components consume these via var(--color-*), the bulk
+   of the site flips automatically; hardcoded-hex utilities are overridden below. */
+/* Tailwind v4 (@theme inline) bakes color literals into utilities, so redefining
+   tokens does NOT re-color `bg-surface`/`text-text`/etc. We therefore override the
+   specific utility classes directly under `.dark`. `!important` mirrors Tailwind's
+   own utility layer and keeps these winning over the baked literals. */
+.dark body {
+  background: #06111f;
+  color: #e8ecf1;
+}
+
+/* Section / surface backgrounds */
+.dark .bg-page { background-color: #06111f !important; }   /* page-level sections */
+.dark .bg-surface { background-color: #0c2340 !important; } /* alternating sections */
+.dark .bg-surface\/50 { background-color: rgba(12, 35, 64, 0.5) !important; }
+
+/* Text colors (baked navy/dark literals → light) */
+.dark .text-text { color: #e8ecf1 !important; }
+.dark .text-text-light { color: #9fb3d0 !important; }
+.dark .text-text-muted { color: #6b83a3 !important; }
 
 /* Premium base styles */
 html {
@@ -27,7 +59,7 @@ html {
 }
 
 body {
-  background: var(--color-white);
+  background: var(--color-page);
   color: var(--color-text);
   font-family: var(--font-sans), system-ui, -apple-system, sans-serif;
   overflow-x: clip;
@@ -75,6 +107,27 @@ body {
   background-size: 24px 24px;
 }
 
+/* Navy dots vanish on a dark bg — switch to a light-alpha dot. */
+.dark .dot-pattern {
+  background-image: radial-gradient(circle, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+}
+
+/* Heading utilities `text-primary` / `text-primary-dark` are the navy "prominent
+   text on light surface" convention throughout the site. On dark surfaces they'd
+   be near-invisible, so remap them to light. (Already-dark sections use text-white,
+   never these, so this is safe.) The token itself is untouched — `bg-primary*`
+   backgrounds stay navy. */
+.dark .text-primary,
+.dark .text-primary-dark {
+  color: #f1f5fb !important;
+}
+/* …but keep the navy icon glyphs visible on the white icon-plates that stay white
+   in dark mode (logo chips, card icon tiles): re-darken text-primary inside a
+   literal white chip. */
+.dark .bg-white .text-primary {
+  color: #0c2340 !important;
+}
+
 /* ─── Glassmorphism ─── */
 .glass {
   background: rgba(255, 255, 255, 0.08);
@@ -108,6 +161,23 @@ body {
     0 20px 40px rgba(12, 35, 64, 0.08),
     0 0 0 1px rgba(220, 38, 38, 0.1);
   transform: translateY(-4px);
+}
+
+/* Dark-mode card surface (card-premium hardcodes white, so override explicitly). */
+.dark .card-premium {
+  background: #0c2340;
+  border-color: rgba(255, 255, 255, 0.08);
+  box-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.3),
+    0 4px 12px rgba(0, 0, 0, 0.25);
+}
+
+.dark .card-premium:hover {
+  border-color: rgba(220, 38, 38, 0.35);
+  box-shadow:
+    0 4px 12px rgba(0, 0, 0, 0.35),
+    0 20px 40px rgba(0, 0, 0, 0.4),
+    0 0 0 1px rgba(220, 38, 38, 0.2);
 }
 
 /* ─── Glow effects ─── */
@@ -312,6 +382,24 @@ input:focus, select:focus, textarea:focus {
   box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.15) !important;
 }
 
+/* Dark-mode form fields: the inputs use literal `bg-white`/`border-gray-100`
+   utilities, so override at the element level for text/select/textarea. */
+.dark input,
+.dark select,
+.dark textarea {
+  background-color: #0c2340 !important;
+  border-color: rgba(255, 255, 255, 0.12) !important;
+  color: var(--color-text);
+}
+.dark input::placeholder,
+.dark textarea::placeholder {
+  color: rgba(159, 179, 208, 0.5);
+}
+.dark select option {
+  background-color: #0c2340;
+  color: var(--color-text);
+}
+
 /* ─── Scrollbar ─── */
 ::-webkit-scrollbar {
   width: 8px;
@@ -336,4 +424,51 @@ input:focus, select:focus, textarea:focus {
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
+}
+
+/* ─── Marquee (concrete-grade ticker) ─── */
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+.marquee-track {
+  display: inline-flex;
+  white-space: nowrap;
+  animation: marquee 28s linear infinite;
+  will-change: transform;
+}
+.marquee-mask {
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+}
+
+/* ─── Rotating drum accent (RMC motif) ─── */
+@keyframes drum-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+.animate-drum {
+  animation: drum-spin 14s linear infinite;
+}
+
+/* ─── Subtle upward drift for the hero mixer glyph ─── */
+@keyframes drift {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-10px) rotate(2deg); }
+}
+.animate-drift {
+  animation: drift 6s ease-in-out infinite;
+}
+
+/* ─── Accessibility: honour reduced-motion ─── */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+  .marquee-track { animation: none !important; }
 }

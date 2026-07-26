@@ -40,7 +40,7 @@ export default function QHSEPage() {
     <>
       <HeroSection title="Built Right. Built Safe. Built to Last." compact />
 
-      <section className="py-14 sm:py-24 bg-white construction-grid">
+      <section className="py-14 sm:py-24 bg-page construction-grid">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <ScrollReveal>
             <div className="flex items-start gap-5 card-premium p-7 mb-14 bg-gradient-to-r from-primary/5 to-accent/5">

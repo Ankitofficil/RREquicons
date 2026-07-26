@@ -39,7 +39,7 @@ export default function EPCPage() {
     <>
       <HeroSection title="End-to-End EPC. One Team. One Accountability." compact />
 
-      <section className="py-14 sm:py-24 bg-white construction-grid">
+      <section className="py-14 sm:py-24 bg-page construction-grid">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <ScrollReveal>
             <SectionHeading title="What is EPC?" tag="Overview" centered={false} />
@@ -83,7 +83,7 @@ export default function EPCPage() {
         </div>
       </section>
 
-      <section className="py-14 sm:py-24 bg-white">
+      <section className="py-14 sm:py-24 bg-page">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <ScrollReveal>
             <SectionHeading title="Our EPC Process" tag="How We Work" />

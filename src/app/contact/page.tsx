@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { MapPin, Phone, Mail, Clock, MessageCircle } from "lucide-react";
+import { MapPin, Phone, Mail, Clock, MessageCircle, ArrowUpRight } from "lucide-react";
 import HeroSection from "@/components/HeroSection";
 import SectionHeading from "@/components/SectionHeading";
 import ContactForm from "@/components/ContactForm";
@@ -13,22 +13,33 @@ export const metadata: Metadata = {
 
 const contactCards = [
   {
-    icon: MapPin,
-    title: "Visit Us",
-    lines: ["A/4, Ward No. 5, Plot No. 51 & 52", "Mahavir Enclave, Ground Floor", "M.E. School Road, Jugsalai", "Jamshedpur, Jharkhand — 831006"],
-    color: "from-blue-500/10 to-blue-600/5",
+    icon: MessageCircle,
+    title: "WhatsApp Us",
+    lines: ["Fastest way to reach us", "Tap to start a chat"],
+    color: "from-emerald-500/10 to-emerald-600/5",
+    href: site.whatsapp.href,
+    external: true,
+    accent: true,
   },
   {
     icon: Phone,
     title: "Call Us",
     lines: [site.phone, "Mon-Sat, 9:30 AM - 6:30 PM IST"],
-    color: "from-emerald-500/10 to-emerald-600/5",
+    color: "from-blue-500/10 to-blue-600/5",
+    href: site.telHref,
   },
   {
     icon: Mail,
     title: "Email Us",
-    lines: ["General: info@rrequiconspvtltd.com", "Careers: careers@rrequiconspvtltd.com", "Tenders: tenders@rrequiconspvtltd.com"],
+    lines: ["info@rrequiconspvtltd.com", "careers@rrequiconspvtltd.com", "tenders@rrequiconspvtltd.com"],
     color: "from-amber-500/10 to-amber-600/5",
+    href: `mailto:${site.email.general}`,
+  },
+  {
+    icon: MapPin,
+    title: "Visit Us",
+    lines: ["Mahavir Enclave, Jugsalai", "M.E. School Road", "Jamshedpur, Jharkhand — 831006"],
+    color: "from-purple-500/10 to-purple-600/5",
   },
 ];
 
@@ -52,24 +63,43 @@ export default function ContactPage() {
       />
 
       {/* Contact Cards */}
-      <section className="py-10 sm:py-16 bg-white construction-grid">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid md:grid-cols-3 gap-5">
-            {contactCards.map((card, i) => (
-              <ScrollReveal key={i} animation="scale-in" delay={i * 100}>
-                <div className={`card-premium p-6 h-full bg-gradient-to-br ${card.color}`}>
-                  <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center mb-4 shadow-sm">
-                    <card.icon className="w-6 h-6 text-primary" />
+      <section className="py-10 sm:py-16 bg-page construction-grid">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            {contactCards.map((card, i) => {
+              const inner = (
+                <>
+                  <div className={`w-12 h-12 rounded-xl flex items-center justify-center mb-4 shadow-sm ${card.accent ? "bg-[#25D366]" : "bg-white"}`}>
+                    <card.icon className={`w-6 h-6 ${card.accent ? "text-white" : "text-primary"}`} />
                   </div>
-                  <h3 className="font-bold text-primary-dark mb-3">{card.title}</h3>
+                  <h3 className="font-bold text-primary-dark mb-3 flex items-center gap-1.5">
+                    {card.title}
+                    {card.href && <ArrowUpRight className="w-4 h-4 text-accent opacity-0 group-hover:opacity-100 transition-opacity" />}
+                  </h3>
                   <div className="space-y-1">
                     {card.lines.map((line, j) => (
-                      <p key={j} className="text-sm text-text-light">{line}</p>
+                      <p key={j} className="text-sm text-text-light break-words">{line}</p>
                     ))}
                   </div>
-                </div>
-              </ScrollReveal>
-            ))}
+                </>
+              );
+              const cardClass = `group card-premium p-6 h-full bg-gradient-to-br ${card.color} block`;
+              return (
+                <ScrollReveal key={i} animation="scale-in" delay={i * 80}>
+                  {card.href ? (
+                    <a
+                      href={card.href}
+                      {...(card.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+                      className={cardClass}
+                    >
+                      {inner}
+                    </a>
+                  ) : (
+                    <div className={cardClass}>{inner}</div>
+                  )}
+                </ScrollReveal>
+              );
+            })}
           </div>
         </div>
       </section>

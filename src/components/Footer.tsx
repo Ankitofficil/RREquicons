@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import { MapPin, Phone, Mail, ArrowRight } from "lucide-react";
+import { MapPin, Phone, Mail, ArrowRight, MessageCircle } from "lucide-react";
 import { site } from "@/lib/site";
 
 const socialLinks = [
@@ -121,13 +121,23 @@ export default function Footer() {
                   <MapPin className="w-4 h-4 mt-0.5 text-accent/60 shrink-0" />
                   <span>Jugsalai, Jamshedpur,<br />Jharkhand &mdash; 831006</span>
                 </li>
-                <li className="flex items-center gap-3 text-sm text-white/40">
-                  <Phone className="w-4 h-4 text-accent/60 shrink-0" />
-                  <span>{site.phone}</span>
+                <li>
+                  <a href={site.telHref} className="flex items-center gap-3 text-sm text-white/50 hover:text-white transition-colors">
+                    <Phone className="w-4 h-4 text-accent/60 shrink-0" />
+                    <span className="tabular-nums">{site.phone}</span>
+                  </a>
                 </li>
-                <li className="flex items-center gap-3 text-sm text-white/40">
-                  <Mail className="w-4 h-4 text-accent/60 shrink-0" />
-                  <span>info@rrequiconspvtltd.com</span>
+                <li>
+                  <a href={site.whatsapp.href} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 text-sm text-white/50 hover:text-white transition-colors">
+                    <MessageCircle className="w-4 h-4 text-[#25D366] shrink-0" />
+                    <span>Chat on WhatsApp</span>
+                  </a>
+                </li>
+                <li>
+                  <a href={`mailto:${site.email.general}`} className="flex items-center gap-3 text-sm text-white/50 hover:text-white transition-colors">
+                    <Mail className="w-4 h-4 text-accent/60 shrink-0" />
+                    <span className="break-all">{site.email.general}</span>
+                  </a>
                 </li>
               </ul>
             </div>

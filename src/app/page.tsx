@@ -18,19 +18,39 @@ import {
   ArrowRight,
   MapPin,
   Quote,
+  MessageCircle,
+  Phone,
+  FlaskConical,
+  Gauge,
+  BadgeCheck,
 } from "lucide-react";
 import SectionHeading from "@/components/SectionHeading";
 import ContactForm from "@/components/ContactForm";
 import ScrollReveal from "@/components/ScrollReveal";
+import { site } from "@/lib/site";
 
-const stats = [
-  { value: "12+", label: "Years of Experience", icon: HardHat },
-  { value: "50+", label: "Projects Delivered", icon: Building2 },
-  { value: "100+", label: "Skilled Professionals", icon: Warehouse },
-  { value: "100%", label: "Safety Commitment", icon: ShieldCheck },
+const concreteGrades = [
+  "M10", "M15", "M20", "M25", "M30", "M35", "M40", "M45", "M50", "M55", "M60+",
+  "Custom Mix Designs", "Pumpable Concrete", "Self-Compacting", "High-Strength",
 ];
 
+const stats = [
+  { value: "60", suffix: " m³/hr", label: "RMC Plant Output", icon: Gauge },
+  { value: "M10–M60+", label: "Concrete Grades", icon: FlaskConical },
+  { value: "12+", label: "Years of Experience", icon: HardHat },
+  { value: "50+", label: "Projects Delivered", icon: Building2 },
+];
+
+// RMC leads; other verticals follow as secondary services.
 const services = [
+  {
+    icon: Factory,
+    title: "Ready-Mix Concrete (RMC)",
+    desc: "Our flagship. Computer-controlled batching plant supplying M10–M60+ concrete, delivered on time by our own transit-mixer fleet.",
+    href: "/services/batching-plant",
+    gradient: "from-accent/10 to-accent/[0.03]",
+    featured: true,
+  },
   {
     icon: Building2,
     title: "Civil Construction & EPC",
@@ -39,16 +59,9 @@ const services = [
     gradient: "from-blue-500/10 to-blue-600/5",
   },
   {
-    icon: Factory,
-    title: "Ready-Mix Concrete",
-    desc: "Computer-controlled batching plants delivering M10-M60+ grade concrete with on-time logistics.",
-    href: "/services/batching-plant",
-    gradient: "from-emerald-500/10 to-emerald-600/5",
-  },
-  {
     icon: Truck,
     title: "Transport & Logistics",
-    desc: "Owned fleet of dumpers, trailers, and transit mixers serving construction projects across the region.",
+    desc: "Owned fleet of dumpers, trailers, and transit mixers serving projects across the region.",
     href: "/services/transport",
     gradient: "from-amber-500/10 to-amber-600/5",
   },
@@ -59,6 +72,13 @@ const services = [
     href: "/services/real-estate",
     gradient: "from-purple-500/10 to-purple-600/5",
   },
+];
+
+const rmcHighlights = [
+  { icon: Gauge, title: "Computer-Controlled Batching", desc: "Every batch is weighed and mixed to exact specification — consistent strength, load after load." },
+  { icon: FlaskConical, title: "In-House Testing Lab", desc: "Cube tests, slump tests, and aggregate analysis on site, so quality is proven, not promised." },
+  { icon: Truck, title: "Owned Transit-Mixer Fleet", desc: "Delivery isn't outsourced. Your pour starts on schedule because we control the logistics." },
+  { icon: BadgeCheck, title: "Certified Materials Only", desc: "Cement, aggregates, and admixtures sourced from approved suppliers — no shortcuts." },
 ];
 
 const advantages = [
@@ -90,14 +110,14 @@ const featuredProjects = [
 
 const testimonials = [
   {
-    quote: "R R Equicons delivered our highway project ahead of schedule without compromising on quality. Their team's dedication is remarkable.",
-    name: "Senior Engineer",
-    company: "State PWD, Jharkhand",
-  },
-  {
     quote: "The RMC quality from their batching plant is consistently excellent. We've been using them for 3 years now and never had an issue.",
     name: "Project Manager",
     company: "Leading Real Estate Developer",
+  },
+  {
+    quote: "R R Equicons delivered our highway project ahead of schedule without compromising on quality. Their team's dedication is remarkable.",
+    name: "Senior Engineer",
+    company: "State PWD, Jharkhand",
   },
   {
     quote: "What impressed us most was their transparency — no hidden costs, clear timelines, and regular progress updates throughout the project.",
@@ -108,81 +128,91 @@ const testimonials = [
 
 const enquiryFields = [
   { name: "name", label: "Your Name", type: "text" as const, required: true, placeholder: "Full Name" },
-  { name: "email", label: "Email", type: "email" as const, required: true, placeholder: "you@example.com" },
   { name: "phone", label: "Phone", type: "tel" as const, required: true, placeholder: "+91 XXXXX XXXXX" },
-  { name: "projectType", label: "Project Type", type: "select" as const, required: true, options: ["Road Construction", "Building Construction", "EPC Project", "RMC Supply", "Transport", "Real Estate", "Other"] },
-  { name: "description", label: "Brief Description", type: "textarea" as const, required: false, placeholder: "Tell us about your project..." },
+  { name: "projectType", label: "I'm interested in", type: "select" as const, required: true, options: ["Ready-Mix Concrete (RMC) Supply", "Road Construction", "Building Construction", "EPC Project", "Transport", "Real Estate", "Other"] },
+  { name: "email", label: "Email", type: "email" as const, required: false, placeholder: "you@example.com" },
+  { name: "description", label: "Grade / Quantity / Site (for RMC) or project details", type: "textarea" as const, required: false, placeholder: "e.g. M25, 40 m³, site at Adityapur — pour on 25th" },
 ];
 
 export default function HomePage() {
   return (
     <>
-      {/* ═══ HERO ═══ */}
-      <section className="relative py-16 sm:py-36 lg:py-48 hero-gradient overflow-hidden">
-        {/* Blueprint grid */}
+      {/* ═══ HERO — RMC-forward ═══ */}
+      <section className="relative py-16 sm:py-32 lg:py-40 hero-gradient overflow-hidden">
         <div className="absolute inset-0 blueprint-pattern" />
 
         {/* Decorative glows */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute top-1/4 -left-32 w-[500px] h-[500px] bg-accent/[0.04] rounded-full blur-3xl" />
+          <div className="absolute top-1/4 -left-32 w-[500px] h-[500px] bg-accent/[0.05] rounded-full blur-3xl" />
           <div className="absolute -bottom-32 right-0 w-[600px] h-[600px] bg-primary-light/10 rounded-full blur-3xl" />
-          {/* Diagonal accent lines */}
-          <div className="absolute top-0 right-0 w-1/2 h-full opacity-[0.02]"
-            style={{ background: "repeating-linear-gradient(-45deg, transparent, transparent 40px, white 40px, white 41px)" }}
-          />
-          {/* Floating construction elements */}
           <div className="absolute top-20 right-[15%] w-20 h-20 border border-accent/10 rounded-xl rotate-12 animate-float" />
           <div className="absolute bottom-32 left-[10%] w-14 h-14 border border-white/5 rounded-lg -rotate-6 animate-float delay-500" />
-          <div className="absolute top-1/3 left-[5%] w-3 h-3 bg-accent/20 rounded-full animate-float delay-300" />
-          <div className="absolute bottom-1/4 right-[8%] w-2 h-2 bg-accent/30 rounded-full animate-float delay-700" />
         </div>
 
-        {/* Bottom accent line */}
         <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-accent to-transparent" />
 
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-4xl mx-auto text-center">
-            {/* Tag */}
-            <div className="inline-flex items-center gap-2 bg-white/[0.06] border border-white/10 rounded-full px-4 py-1.5 mb-8 animate-fade-in">
+            <div className="inline-flex items-center gap-2 bg-accent/15 border border-accent/25 rounded-full px-4 py-1.5 mb-7 animate-fade-in">
               <span className="w-2 h-2 rounded-full bg-accent animate-pulse" />
-              <span className="text-xs font-semibold text-white/60 tracking-wider uppercase">Building India&apos;s Infrastructure</span>
+              <span className="text-xs font-bold text-white/80 tracking-wider uppercase">Jamshedpur&apos;s Ready-Mix Concrete Partner</span>
             </div>
 
-            <h1 className="text-3xl sm:text-5xl lg:text-6xl xl:text-7xl font-black text-white leading-[1.08] mb-6 sm:mb-8 animate-fade-in-up tracking-tight">
-              Engineering India&apos;s{" "}
-              <span className="relative">
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-accent via-accent-light to-accent">
-                  Tomorrow
-                </span>
+            <h1 className="text-3xl sm:text-5xl lg:text-6xl xl:text-7xl font-black text-white leading-[1.08] mb-6 animate-fade-in-up tracking-tight">
+              Ready-Mix Concrete,{" "}
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-accent via-accent-light to-accent">
+                Delivered On Time.
               </span>
-              <br />
-              <span className="text-white/90">Today.</span>
+              <br className="hidden sm:block" />
+              <span className="text-white/90"> Every Pour.</span>
             </h1>
 
-            <p className="text-base sm:text-xl text-white/50 max-w-2xl mx-auto mb-8 sm:mb-12 animate-fade-in-up delay-200 leading-relaxed">
-              From highways and bridges to industrial complexes and residential townships — R R Equicons delivers turnkey construction solutions backed by 12+ years of execution excellence.
+            <p className="text-base sm:text-xl text-white/60 max-w-2xl mx-auto mb-8 sm:mb-10 animate-fade-in-up delay-200 leading-relaxed">
+              Computer-controlled M10–M60+ concrete from our own batching plant, delivered by our owned transit-mixer fleet across Jamshedpur & Jharkhand — backed by 12+ years of civil construction expertise.
             </p>
 
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 animate-fade-in-up delay-300">
-              <Link href="/contact" className="btn-primary text-base flex items-center gap-2.5">
-                Discuss Your Project <ArrowRight className="w-4 h-4" />
-              </Link>
-              <Link href="/projects" className="btn-secondary text-base">
-                View Our Portfolio
-              </Link>
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 animate-fade-in-up delay-300">
+              <a
+                href={site.whatsapp.rmcHref}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn-primary text-base flex items-center gap-2.5 !bg-[#25D366] !shadow-[#25D366]/30 hover:!shadow-[#25D366]/40 w-full sm:w-auto justify-center"
+              >
+                <MessageCircle className="w-5 h-5" /> Get an RMC Quote on WhatsApp
+              </a>
+              <a href={site.telHref} className="btn-secondary text-base flex items-center gap-2.5 w-full sm:w-auto justify-center">
+                <Phone className="w-4 h-4" /> Call Now
+              </a>
             </div>
+            <p className="mt-4 text-xs text-white/40 animate-fade-in-up delay-300">
+              Also delivering roads, bridges, EPC & real estate projects.
+            </p>
+          </div>
+        </div>
+
+        {/* Concrete-grade marquee */}
+        <div className="relative mt-12 sm:mt-16 marquee-mask animate-fade-in delay-500">
+          <div className="marquee-track gap-3 text-white/30">
+            {[...concreteGrades, ...concreteGrades].map((g, i) => (
+              <span key={i} className="inline-flex items-center gap-3 text-sm font-bold uppercase tracking-widest">
+                {g}
+                <span className="w-1.5 h-1.5 rounded-full bg-accent/40" />
+              </span>
+            ))}
           </div>
         </div>
       </section>
 
       {/* ═══ STATS ═══ */}
-      <section className="relative z-10 -mt-10 sm:-mt-12">
+      <section className="relative z-10 -mt-8 sm:-mt-12">
         <div className="max-w-5xl mx-auto px-3 sm:px-4">
-          <div className="bg-white rounded-2xl shadow-2xl shadow-black/8 border border-gray-100 grid grid-cols-2 md:grid-cols-4 overflow-hidden">
+          <div className="bg-white dark:bg-[#0c2340] rounded-2xl shadow-2xl shadow-black/8 dark:shadow-black/40 border border-gray-100 dark:border-white/10 grid grid-cols-2 md:grid-cols-4 overflow-hidden">
             {stats.map((stat, i) => (
-              <div key={i} className="stat-card p-4 sm:p-8 text-center relative group hover:bg-surface/50 transition-colors border-r border-b border-gray-50 last:border-r-0 md:border-b-0">
+              <div key={i} className="stat-card p-4 sm:p-8 text-center relative group hover:bg-surface/50 transition-colors border-r border-b border-gray-50 last:border-r-0 [&:nth-child(2)]:border-r-0 md:[&:nth-child(2)]:border-r md:border-b-0">
                 <stat.icon className="w-4 h-4 sm:w-5 sm:h-5 text-accent mx-auto mb-1.5 sm:mb-2 opacity-60" />
-                <div className="text-2xl sm:text-4xl font-black text-primary mb-0.5 sm:mb-1 tracking-tight">{stat.value}</div>
+                <div className="text-xl sm:text-3xl font-black text-primary mb-0.5 sm:mb-1 tracking-tight whitespace-nowrap">
+                  {stat.value}<span className="text-accent">{stat.suffix ?? ""}</span>
+                </div>
                 <div className="text-[10px] sm:text-xs font-medium text-text-muted uppercase tracking-wider">{stat.label}</div>
               </div>
             ))}
@@ -190,8 +220,140 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* ═══ RMC FLAGSHIP — the new focal point ═══ */}
+      <section className="py-14 sm:py-24 bg-page construction-grid relative overflow-hidden">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
+            {/* Left: the pitch */}
+            <ScrollReveal animation="slide-left">
+              <div>
+                <span className="inline-flex items-center gap-2 text-xs font-bold tracking-[0.2em] uppercase text-accent-dark mb-3">
+                  <span className="w-6 h-px bg-accent" /> Our Flagship
+                </span>
+                <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black tracking-tight text-primary-dark mb-4">
+                  Concrete you can build a schedule around
+                </h2>
+                <p className="text-text-light leading-relaxed text-[15px] mb-6">
+                  Ready-Mix Concrete is where R R Equicons started earning repeat business — and it&apos;s still the heart of what we do. Because we <strong className="text-text font-semibold">own the plant and the mixers</strong>, we control quality and timing end to end. When we say the truck arrives at 7 AM, it arrives at 7 AM.
+                </p>
+                <div className="grid sm:grid-cols-2 gap-4 mb-8">
+                  {rmcHighlights.map((h, i) => (
+                    <div key={i} className="flex gap-3">
+                      <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-accent/15 to-accent/5 flex items-center justify-center shrink-0">
+                        <h.icon className="w-5 h-5 text-accent-dark" />
+                      </div>
+                      <div>
+                        <h3 className="font-bold text-text text-sm mb-0.5">{h.title}</h3>
+                        <p className="text-xs text-text-light leading-relaxed">{h.desc}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <div className="flex flex-col sm:flex-row gap-3">
+                  <a
+                    href={site.whatsapp.rmcHref}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="btn-primary text-sm inline-flex items-center justify-center gap-2 !bg-[#25D366] !shadow-[#25D366]/30"
+                  >
+                    <MessageCircle className="w-4 h-4" /> Request RMC Quote
+                  </a>
+                  <Link href="/services/batching-plant" className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl border-2 border-primary/10 text-primary font-bold text-sm hover:border-accent/30 hover:text-accent transition-colors">
+                    Explore the Plant <ArrowRight className="w-4 h-4" />
+                  </Link>
+                </div>
+              </div>
+            </ScrollReveal>
+
+            {/* Right: visual "mixer drum" spec card */}
+            <ScrollReveal animation="slide-right" delay={150}>
+              <div className="relative">
+                <div className="absolute -inset-4 bg-gradient-to-br from-accent/10 to-primary/5 rounded-[2rem] -z-10" />
+                <div className="relative rounded-3xl bg-primary-dark overflow-hidden p-8 sm:p-10 shadow-2xl shadow-primary/20">
+                  <div className="absolute inset-0 blueprint-pattern opacity-40" />
+                  {/* Rotating drum motif */}
+                  <div className="absolute -top-16 -right-16 w-56 h-56 rounded-full border-[3px] border-dashed border-accent/20 animate-drum" />
+                  <div className="absolute -bottom-20 -left-10 w-40 h-40 rounded-full border-2 border-white/5 animate-drum" style={{ animationDuration: "22s" }} />
+
+                  <div className="relative">
+                    <div className="flex items-center gap-3 mb-8">
+                      <div className="w-12 h-12 rounded-2xl bg-accent/20 border border-accent/30 flex items-center justify-center">
+                        <Factory className="w-6 h-6 text-accent-light" />
+                      </div>
+                      <div>
+                        <div className="text-white font-black text-lg leading-tight">RMC Batching Plant</div>
+                        <div className="text-white/40 text-xs">Gamharia, Jamshedpur region</div>
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-px bg-white/5 rounded-2xl overflow-hidden">
+                      {[
+                        { k: "Plant Output", v: "60 m³/hr" },
+                        { k: "Grade Range", v: "M10–M60+" },
+                        { k: "Mixing", v: "Computer-controlled" },
+                        { k: "Delivery", v: "Owned mixers" },
+                      ].map((row) => (
+                        <div key={row.k} className="bg-primary-dark/80 p-4 sm:p-5">
+                          <div className="text-[10px] uppercase tracking-widest text-accent/70 font-bold mb-1">{row.k}</div>
+                          <div className="text-white font-black text-base sm:text-lg">{row.v}</div>
+                        </div>
+                      ))}
+                    </div>
+
+                    <div className="mt-6 flex items-center gap-2 text-xs text-white/50">
+                      <BadgeCheck className="w-4 h-4 text-[#25D366]" />
+                      Slump & cube-tested in our on-site lab, batch by batch.
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </ScrollReveal>
+          </div>
+        </div>
+      </section>
+
+      {/* ═══ SERVICES (RMC first) ═══ */}
+      <section className="py-14 sm:py-24 bg-surface dot-pattern relative">
+        <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary/10 to-transparent" />
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <ScrollReveal>
+            <SectionHeading
+              tag="Our Expertise"
+              title="What We Do"
+              subtitle="Ready-Mix Concrete leads the way — supported by full-scope civil construction."
+            />
+          </ScrollReveal>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            {services.map((service, i) => (
+              <ScrollReveal key={service.href} delay={i * 100}>
+                <Link
+                  href={service.href}
+                  className={`group card-premium p-7 h-full flex flex-col bg-gradient-to-br ${service.gradient} ${
+                    service.featured ? "ring-2 ring-accent/30 relative" : ""
+                  }`}
+                >
+                  {service.featured && (
+                    <span className="absolute -top-3 left-6 text-[10px] font-black uppercase tracking-wider bg-accent text-white px-2.5 py-1 rounded-full shadow-lg shadow-accent/30">
+                      Flagship
+                    </span>
+                  )}
+                  <div className="w-14 h-14 bg-white rounded-xl flex items-center justify-center mb-5 shadow-sm group-hover:shadow-md group-hover:scale-105 transition-all">
+                    <service.icon className={`w-7 h-7 ${service.featured ? "text-accent" : "text-primary"}`} />
+                  </div>
+                  <h3 className="font-bold text-lg text-text mb-2">{service.title}</h3>
+                  <p className="text-sm text-text-light leading-relaxed mb-4 flex-1">{service.desc}</p>
+                  <span className="text-sm text-primary font-bold flex items-center gap-1.5 group-hover:text-accent transition-colors">
+                    Explore <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+                  </span>
+                </Link>
+              </ScrollReveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* ═══ WHO WE ARE ═══ */}
-      <section className="py-14 sm:py-24 bg-white construction-grid">
+      <section className="py-14 sm:py-24 bg-page construction-grid">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
             <ScrollReveal animation="slide-left">
@@ -203,10 +365,10 @@ export default function HomePage() {
                 />
                 <div className="space-y-5 text-text-light leading-relaxed text-[15px]">
                   <p>
-                    R R Equicons Pvt Ltd is a Jamshedpur-headquartered civil construction company that has earned its reputation through one principle: <strong className="text-text font-semibold">deliver what you promise, on time, every time.</strong>
+                    R R Equicons Pvt Ltd is a Jamshedpur-headquartered company that has earned its reputation through one principle: <strong className="text-text font-semibold">deliver what you promise, on time, every time.</strong>
                   </p>
                   <p>
-                    Since 2013, we have grown from a regional contractor into a multi-vertical construction group — executing EPC projects, operating ready-mix concrete plants, and providing heavy-equipment logistics across Jharkhand, Bihar, Odisha, and beyond.
+                    Since 2013, we have grown from a regional contractor into a multi-vertical construction group — with <strong className="text-text font-semibold">Ready-Mix Concrete at our core</strong>, alongside EPC projects and heavy-equipment logistics across Jharkhand, Bihar, Odisha, and beyond.
                   </p>
                   <p>
                     What sets us apart isn&apos;t just our equipment or our scale — it&apos;s our refusal to compromise on <strong className="text-text font-semibold">quality, safety, and integrity</strong>, even when deadlines tighten or margins shrink.
@@ -228,7 +390,7 @@ export default function HomePage() {
                 <div className="grid grid-cols-2 gap-4">
                   {[
                     { icon: HardHat, value: "2013", label: "Year Founded", color: "from-blue-500/10 to-blue-600/5" },
-                    { icon: Building2, value: "3", label: "Business Verticals", color: "from-emerald-500/10 to-emerald-600/5" },
+                    { icon: Factory, value: "RMC", label: "At Our Core", color: "from-accent/10 to-accent/[0.03]" },
                     { icon: Warehouse, value: "50+", label: "Projects Delivered", color: "from-amber-500/10 to-amber-600/5" },
                     { icon: Truck, value: "PAN", label: "India Operations", color: "from-purple-500/10 to-purple-600/5" },
                   ].map((item, i) => (
@@ -245,41 +407,9 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ═══ SERVICES ═══ */}
+      {/* ═══ RRE ADVANTAGE ═══ */}
       <section className="py-14 sm:py-24 bg-surface dot-pattern relative">
         <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary/10 to-transparent" />
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <ScrollReveal>
-            <SectionHeading
-              tag="Our Expertise"
-              title="What We Do"
-              subtitle="Comprehensive construction solutions from foundation to finish."
-            />
-          </ScrollReveal>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
-            {services.map((service, i) => (
-              <ScrollReveal key={service.href} delay={i * 100}>
-                <Link
-                  href={service.href}
-                  className={`group card-premium p-7 h-full flex flex-col bg-gradient-to-br ${service.gradient}`}
-                >
-                  <div className="w-14 h-14 bg-white rounded-xl flex items-center justify-center mb-5 shadow-sm group-hover:shadow-md transition-shadow group-hover:scale-105 transition-transform">
-                    <service.icon className="w-7 h-7 text-primary" />
-                  </div>
-                  <h3 className="font-bold text-lg text-text mb-2">{service.title}</h3>
-                  <p className="text-sm text-text-light leading-relaxed mb-4 flex-1">{service.desc}</p>
-                  <span className="text-sm text-primary font-bold flex items-center gap-1.5 group-hover:text-accent transition-colors">
-                    Explore <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
-                  </span>
-                </Link>
-              </ScrollReveal>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ═══ RRE ADVANTAGE ═══ */}
-      <section className="py-14 sm:py-24 bg-white relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <ScrollReveal>
             <SectionHeading
@@ -291,7 +421,7 @@ export default function HomePage() {
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
             {advantages.map((adv, i) => (
               <ScrollReveal key={i} delay={i * 80}>
-                <div className="group flex gap-3 sm:gap-4 p-5 sm:p-6 rounded-2xl bg-surface border border-gray-100 hover:border-accent/20 hover:shadow-lg hover:shadow-accent/5 transition-all">
+                <div className="group flex gap-3 sm:gap-4 p-5 sm:p-6 rounded-2xl bg-white dark:bg-[#0c2340] border border-gray-100 dark:border-white/10 hover:border-accent/20 hover:shadow-lg hover:shadow-accent/5 transition-all h-full">
                   <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-accent/15 to-accent/5 rounded-xl flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
                     <adv.icon className="w-5 h-5 sm:w-6 sm:h-6 text-accent-dark" />
                   </div>
@@ -323,7 +453,7 @@ export default function HomePage() {
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
             {featuredProjects.map((project, i) => (
               <ScrollReveal key={i} delay={i * 100}>
-                <div className="group rounded-2xl overflow-hidden bg-white/[0.03] border border-white/[0.06] hover:border-accent/20 hover:bg-white/[0.06] transition-all">
+                <div className="group rounded-2xl overflow-hidden bg-white/[0.03] border border-white/[0.06] hover:border-accent/20 hover:bg-white/[0.06] transition-all h-full">
                   <div className={`h-44 bg-gradient-to-br ${project.color} flex items-center justify-center relative`}>
                     <Building2 className="w-14 h-14 text-white/10" />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
@@ -359,7 +489,7 @@ export default function HomePage() {
       </section>
 
       {/* ═══ TESTIMONIALS ═══ */}
-      <section className="py-14 sm:py-24 bg-white relative">
+      <section className="py-14 sm:py-24 bg-page relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <ScrollReveal>
             <SectionHeading
@@ -399,7 +529,7 @@ export default function HomePage() {
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
             {industries.map((ind, i) => (
               <ScrollReveal key={i} animation="scale-in" delay={i * 80}>
-                <div className="card-premium flex flex-col items-center text-center p-6 group">
+                <div className="card-premium flex flex-col items-center text-center p-6 group h-full">
                   <div className="w-14 h-14 bg-gradient-to-br from-primary/10 to-accent/5 rounded-xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
                     <ind.icon className="w-7 h-7 text-primary" />
                   </div>
@@ -412,14 +542,32 @@ export default function HomePage() {
       </section>
 
       {/* ═══ LEAD CAPTURE ═══ */}
-      <section className="py-14 sm:py-24 bg-white relative">
+      <section className="py-14 sm:py-24 bg-page relative">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
           <ScrollReveal>
             <SectionHeading
               tag="Start a Conversation"
-              title="Have a project in mind?"
-              subtitle="Tell us about your requirements and our team will get back to you within 24 hours."
+              title="Need concrete, or a construction partner?"
+              subtitle="Tell us the grade, quantity, and site — or your project scope — and our team will get back within 24 hours. Prefer to talk now? WhatsApp or call us."
             />
+          </ScrollReveal>
+          <ScrollReveal delay={150}>
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mb-8">
+              <a
+                href={site.whatsapp.rmcHref}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn-primary text-sm inline-flex items-center justify-center gap-2 !bg-[#25D366] !shadow-[#25D366]/30 w-full sm:w-auto"
+              >
+                <MessageCircle className="w-4 h-4" /> WhatsApp Us
+              </a>
+              <a
+                href={site.telHref}
+                className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl border-2 border-primary/10 text-primary font-bold text-sm hover:border-accent/30 hover:text-accent transition-colors w-full sm:w-auto"
+              >
+                <Phone className="w-4 h-4" /> {site.phone}
+              </a>
+            </div>
           </ScrollReveal>
           <ScrollReveal delay={200}>
             <div className="card-premium p-5 sm:p-10 !shadow-2xl !shadow-black/5">

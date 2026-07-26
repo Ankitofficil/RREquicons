@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
-import Link from "next/link";
-import { Truck, Package, MapPin, ArrowRight } from "lucide-react";
+import { Truck, Package, MapPin } from "lucide-react";
 import HeroSection from "@/components/HeroSection";
 import ScrollReveal from "@/components/ScrollReveal";
+import QuickContactCTA from "@/components/QuickContactCTA";
 
 export const metadata: Metadata = {
   title: "Transport & Logistics",
@@ -18,7 +18,7 @@ export default function TransportPage() {
     <>
       <HeroSection title="Heavy Loads. Reliable Delivery." compact />
 
-      <section className="py-14 sm:py-24 bg-white construction-grid">
+      <section className="py-14 sm:py-24 bg-page construction-grid">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <ScrollReveal>
             <p className="text-text-light leading-relaxed text-lg mb-14">
@@ -71,7 +71,7 @@ export default function TransportPage() {
               </div>
               <div className="flex flex-wrap gap-2">
                 {areas.map((area, i) => (
-                  <span key={i} className="bg-white px-4 py-2 rounded-xl text-sm text-text-light border border-gray-100 font-medium shadow-sm">
+                  <span key={i} className="bg-white dark:bg-[#0c2340] px-4 py-2 rounded-xl text-sm text-text-light border border-gray-100 dark:border-white/10 font-medium shadow-sm">
                     {area}
                   </span>
                 ))}
@@ -80,9 +80,7 @@ export default function TransportPage() {
           </ScrollReveal>
 
           <ScrollReveal delay={400}>
-            <Link href="/contact" className="btn-primary inline-flex items-center gap-2">
-              Request Transport Quote <ArrowRight className="w-4 h-4" />
-            </Link>
+            <QuickContactCTA waLabel="Request Transport Quote" />
           </ScrollReveal>
         </div>
       </section>

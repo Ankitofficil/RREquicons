@@ -1,9 +1,8 @@
 import type { Metadata } from "next";
-import Link from "next/link";
-import { ArrowRight } from "lucide-react";
 import HeroSection from "@/components/HeroSection";
 import SectionHeading from "@/components/SectionHeading";
 import ScrollReveal from "@/components/ScrollReveal";
+import QuickContactCTA from "@/components/QuickContactCTA";
 
 export const metadata: Metadata = {
   title: "Civil Construction Services",
@@ -24,7 +23,7 @@ export default function ConstructionPage() {
     <>
       <HeroSection title="Civil Construction Done Right." compact />
 
-      <section className="py-14 sm:py-24 bg-white construction-grid">
+      <section className="py-14 sm:py-24 bg-page construction-grid">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <ScrollReveal>
             <p className="text-text-light leading-relaxed text-lg mb-14">
@@ -52,9 +51,11 @@ export default function ConstructionPage() {
               <p className="text-text-light leading-relaxed text-[15px] mb-6">
                 Every project starts with understanding the client&apos;s vision and ends with a structure that exceeds it. In between: rigorous planning, disciplined execution, and constant communication.
               </p>
-              <Link href="/contact" className="btn-primary inline-flex items-center gap-2 text-sm">
-                Request a Site Visit <ArrowRight className="w-4 h-4" />
-              </Link>
+              <QuickContactCTA waLabel="Request a Site Visit" />
+              <p className="mt-6 text-sm text-text-muted">
+                Need concrete too? Explore our{" "}
+                <a href="/services/batching-plant" className="text-accent font-semibold hover:underline">Ready-Mix Concrete</a>.
+              </p>
             </div>
           </ScrollReveal>
         </div>

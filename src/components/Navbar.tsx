@@ -3,7 +3,9 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useState, useEffect } from "react";
-import { Menu, X, ChevronDown, Phone, ArrowRight } from "lucide-react";
+import { Menu, X, ChevronDown, Phone, ArrowRight, MessageCircle } from "lucide-react";
+import { site } from "@/lib/site";
+import ThemeToggle from "@/components/ThemeToggle";
 
 const aboutLinks = [
   { href: "/about", label: "About Us", desc: "Our story & identity" },
@@ -19,10 +21,11 @@ const projectLinks = [
   { href: "/projects/case-studies", label: "Case Studies", desc: "Proof of execution" },
 ];
 
+// RMC leads the services list — it's the flagship offering.
 const serviceLinks = [
+  { href: "/services/batching-plant", label: "Ready-Mix Concrete (RMC)", desc: "M10–M60+ · own batching plant" },
   { href: "/services/construction", label: "Civil Construction", desc: "Roads, bridges, buildings" },
-  { href: "/services/batching-plant", label: "Batching Plant (RMC)", desc: "M10-M60+ concrete" },
-  { href: "/services/transport", label: "Transport & Logistics", desc: "Heavy-haul fleet" },
+  { href: "/services/transport", label: "Transport & Logistics", desc: "Owned transit-mixer fleet" },
   { href: "/services/real-estate", label: "Real Estate", desc: "Residential & commercial" },
 ];
 
@@ -53,14 +56,14 @@ function MegaDropdown({
           open ? "opacity-100 scale-100 translate-y-0" : "opacity-0 scale-95 -translate-y-2 pointer-events-none"
         }`}
       >
-        <div className="bg-white rounded-2xl shadow-2xl shadow-black/10 border border-gray-100/80 overflow-hidden p-2">
+        <div className="bg-white dark:bg-[#0c2340] rounded-2xl shadow-2xl shadow-black/10 dark:shadow-black/40 border border-gray-100/80 dark:border-white/10 overflow-hidden p-2">
           {links.map((link) => (
             <Link
               key={link.href}
               href={link.href}
-              className="group flex flex-col gap-0.5 px-4 py-3 rounded-xl hover:bg-gradient-to-r hover:from-accent/5 hover:to-transparent transition-all"
+              className="group flex flex-col gap-0.5 px-4 py-3 rounded-xl hover:bg-gradient-to-r hover:from-accent/5 hover:to-transparent dark:hover:from-accent/10 transition-all"
             >
-              <span className="text-sm font-semibold text-text group-hover:text-primary transition-colors">
+              <span className="text-sm font-semibold text-text group-hover:text-primary dark:group-hover:text-accent-light transition-colors">
                 {link.label}
               </span>
               <span className="text-xs text-text-muted">{link.desc}</span>
@@ -83,18 +86,45 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", handler);
   }, []);
 
+  // Lock body scroll + Escape-to-close while the mobile menu is open.
+  useEffect(() => {
+    if (!mobileOpen) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setMobileOpen(false);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => {
+      document.body.style.overflow = prev;
+      window.removeEventListener("keydown", onKey);
+    };
+  }, [mobileOpen]);
+
   return (
     <>
-      {/* Announcement bar */}
-      <div className="bg-gradient-to-r from-accent via-accent-light to-accent text-white text-center text-[11px] sm:text-sm py-2 px-3 sm:px-4 font-semibold relative overflow-hidden">
+      {/* Announcement / quick-contact bar */}
+      <div className="bg-gradient-to-r from-accent via-accent-light to-accent text-white text-[11px] sm:text-sm py-2 px-3 sm:px-4 font-semibold relative overflow-hidden">
         <div className="absolute inset-0 bg-[linear-gradient(90deg,transparent,rgba(255,255,255,0.2),transparent)] animate-[shimmer_3s_ease_infinite] bg-[length:200%_100%]" />
-        <span className="relative leading-snug">
-          <span className="hidden sm:inline">Now accepting tenders for FY 2026-27 infrastructure projects across Jharkhand, Bihar & Odisha. </span>
-          <span className="sm:hidden">FY 2026-27 tenders open — Jharkhand, Bihar & Odisha. </span>
-          <Link href="/contact" className="underline font-extrabold hover:text-primary-dark/80 inline-flex items-center gap-1">
-            Submit RFQ <ArrowRight className="w-3 h-3" />
-          </Link>
-        </span>
+        <div className="relative max-w-7xl mx-auto flex items-center justify-center sm:justify-between gap-3 leading-snug">
+          <span className="hidden sm:inline">
+            Ready-Mix Concrete supplied across Jamshedpur & Jharkhand — M10 to M60+, delivered on time.
+          </span>
+          <span className="flex items-center gap-3 sm:gap-4 shrink-0">
+            <a href={site.telHref} className="inline-flex items-center gap-1.5 hover:text-primary-dark/80 transition-colors">
+              <Phone className="w-3 h-3" />
+              <span className="tabular-nums">{site.phone}</span>
+            </a>
+            <a
+              href={site.whatsapp.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hidden sm:inline-flex items-center gap-1 underline font-extrabold hover:text-primary-dark/80"
+            >
+              WhatsApp <ArrowRight className="w-3 h-3" />
+            </a>
+          </span>
+        </div>
       </div>
 
       <nav
@@ -121,15 +151,22 @@ export default function Navbar() {
             </Link>
 
             {/* Desktop nav */}
-            <div className="hidden lg:flex items-center gap-7">
+            <div className="hidden lg:flex items-center gap-6">
               <Link href="/" className="text-[13px] font-semibold text-white/80 hover:text-white tracking-wide uppercase transition-colors py-2">
                 Home
               </Link>
+              <Link
+                href="/services/batching-plant"
+                className="text-[13px] font-bold text-accent-light hover:text-white tracking-wide uppercase transition-colors py-2 flex items-center gap-1.5"
+              >
+                <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
+                Ready-Mix Concrete
+              </Link>
               <MegaDropdown
-                label="About"
-                links={aboutLinks}
-                open={openDropdown === "about"}
-                onToggle={() => setOpenDropdown("about")}
+                label="Services"
+                links={serviceLinks}
+                open={openDropdown === "services"}
+                onToggle={() => setOpenDropdown("services")}
                 onClose={() => setOpenDropdown(null)}
               />
               <MegaDropdown
@@ -140,78 +177,139 @@ export default function Navbar() {
                 onClose={() => setOpenDropdown(null)}
               />
               <MegaDropdown
-                label="Services"
-                links={serviceLinks}
-                open={openDropdown === "services"}
-                onToggle={() => setOpenDropdown("services")}
+                label="About"
+                links={aboutLinks}
+                open={openDropdown === "about"}
+                onToggle={() => setOpenDropdown("about")}
                 onClose={() => setOpenDropdown(null)}
               />
               <Link href="/careers" className="text-[13px] font-semibold text-white/80 hover:text-white tracking-wide uppercase transition-colors py-2">
                 Careers
               </Link>
-              <Link href="/contact" className="text-[13px] font-semibold text-white/80 hover:text-white tracking-wide uppercase transition-colors py-2">
-                Contact
-              </Link>
-              <Link
-                href="/contact"
-                className="btn-primary text-sm !px-6 !py-2.5 flex items-center gap-2"
+              <ThemeToggle />
+              <a
+                href={site.whatsapp.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn-primary text-sm !px-5 !py-2.5 flex items-center gap-2 !bg-[#25D366] !shadow-[#25D366]/30 hover:!shadow-[#25D366]/40"
               >
-                <Phone className="w-3.5 h-3.5" />
-                Get a Quote
-              </Link>
+                <MessageCircle className="w-4 h-4" />
+                WhatsApp
+              </a>
             </div>
 
-            {/* Mobile toggle */}
-            <button
-              onClick={() => setMobileOpen(!mobileOpen)}
-              className="lg:hidden text-white p-2 hover:bg-white/10 rounded-xl transition-colors"
-            >
-              {mobileOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-            </button>
-          </div>
-        </div>
-
-        {/* Mobile menu */}
-        <div
-          className={`lg:hidden transition-all duration-400 ${
-            mobileOpen ? "max-h-[80vh] opacity-100" : "max-h-0 opacity-0 overflow-hidden"
-          }`}
-        >
-          <div className="bg-primary-dark/98 backdrop-blur-xl border-t border-white/5 px-4 py-4 space-y-1">
-            <Link href="/" className="block py-3 text-white/90 hover:text-white text-sm font-semibold" onClick={() => setMobileOpen(false)}>
-              Home
-            </Link>
-
-            {[
-              { title: "About", links: aboutLinks },
-              { title: "Projects", links: projectLinks },
-              { title: "Services", links: serviceLinks },
-            ].map((group) => (
-              <div key={group.title} className="border-t border-white/5 pt-3 mt-3">
-                <p className="text-[10px] text-accent/70 uppercase tracking-[0.2em] font-bold mb-2">{group.title}</p>
-                {group.links.map((l) => (
-                  <Link key={l.href} href={l.href} className="block py-2.5 text-white/70 hover:text-white text-sm pl-3 transition-colors" onClick={() => setMobileOpen(false)}>
-                    {l.label}
-                  </Link>
-                ))}
-              </div>
-            ))}
-
-            <div className="border-t border-white/5 pt-3 mt-3 space-y-1">
-              <Link href="/careers" className="block py-3 text-white/90 hover:text-white text-sm font-semibold" onClick={() => setMobileOpen(false)}>Careers</Link>
-              <Link href="/contact" className="block py-3 text-white/90 hover:text-white text-sm font-semibold" onClick={() => setMobileOpen(false)}>Contact</Link>
+            {/* Mobile: theme toggle + hamburger */}
+            <div className="lg:hidden flex items-center gap-1">
+              <ThemeToggle />
+              <button
+                onClick={() => setMobileOpen(!mobileOpen)}
+                aria-label={mobileOpen ? "Close menu" : "Open menu"}
+                aria-expanded={mobileOpen}
+                aria-controls="mobile-menu"
+                className="text-white p-2 hover:bg-white/10 rounded-xl transition-colors"
+              >
+                {mobileOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+              </button>
             </div>
-
-            <Link
-              href="/contact"
-              className="block mt-4 btn-primary text-center text-sm"
-              onClick={() => setMobileOpen(false)}
-            >
-              Get a Quote
-            </Link>
           </div>
         </div>
       </nav>
+
+      {/*
+        Mobile menu — a self-contained, full-screen overlay rendered OUTSIDE <nav>.
+        It must live outside the nav because the nav's `backdrop-blur` establishes a
+        containing block that would otherwise trap `position: fixed` children.
+      */}
+      {/* Backdrop */}
+      <div
+        onClick={() => setMobileOpen(false)}
+        aria-hidden="true"
+        className={`lg:hidden fixed inset-0 z-[60] bg-black/60 transition-opacity duration-300 ${
+          mobileOpen ? "opacity-100" : "opacity-0 pointer-events-none"
+        }`}
+      />
+
+      {/* Sliding full-height panel with its own header + internal scroll */}
+      <div
+        id="mobile-menu"
+        className={`lg:hidden fixed inset-0 z-[70] flex flex-col bg-primary-dark transition-transform duration-300 ease-out ${
+          mobileOpen ? "translate-x-0" : "translate-x-full pointer-events-none"
+        }`}
+      >
+        {/* Panel header */}
+        <div className="flex items-center justify-between h-16 px-4 border-b border-white/10 shrink-0">
+          <div className="bg-white rounded-xl px-2.5 py-1.5 shadow-lg shadow-black/10">
+            <Image src="/rr-equicons-hq.png" alt="R R Equicons Pvt Ltd" width={540} height={400} className="h-8 w-auto" />
+          </div>
+          <button
+            onClick={() => setMobileOpen(false)}
+            aria-label="Close menu"
+            className="text-white p-2 hover:bg-white/10 rounded-xl transition-colors"
+          >
+            <X className="w-6 h-6" />
+          </button>
+        </div>
+
+        {/* Scrollable links */}
+        <div className="flex-1 overflow-y-auto overscroll-contain px-4 py-4 space-y-1">
+          {/* Flagship RMC link */}
+          <Link
+            href="/services/batching-plant"
+            className="flex items-center justify-between py-3.5 px-4 mb-1 rounded-xl bg-accent/15 border border-accent/25 text-white font-bold text-sm active:bg-accent/25 transition-colors"
+            onClick={() => setMobileOpen(false)}
+          >
+            <span className="flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-accent animate-pulse" />
+              Ready-Mix Concrete
+            </span>
+            <ArrowRight className="w-4 h-4 text-accent" />
+          </Link>
+
+          <Link href="/" className="block py-3 text-white/90 hover:text-white text-sm font-semibold" onClick={() => setMobileOpen(false)}>
+            Home
+          </Link>
+
+          {[
+            { title: "Services", links: serviceLinks },
+            { title: "Projects", links: projectLinks },
+            { title: "About", links: aboutLinks },
+          ].map((group) => (
+            <div key={group.title} className="border-t border-white/5 pt-3 mt-3">
+              <p className="text-[10px] text-accent/70 uppercase tracking-[0.2em] font-bold mb-2">{group.title}</p>
+              {group.links.map((l) => (
+                <Link key={l.href} href={l.href} className="block py-2.5 text-white/70 hover:text-white text-sm pl-3 transition-colors" onClick={() => setMobileOpen(false)}>
+                  {l.label}
+                </Link>
+              ))}
+            </div>
+          ))}
+
+          <div className="border-t border-white/5 pt-3 mt-3 space-y-1">
+            <Link href="/careers" className="block py-3 text-white/90 hover:text-white text-sm font-semibold" onClick={() => setMobileOpen(false)}>Careers</Link>
+            <Link href="/contact" className="block py-3 text-white/90 hover:text-white text-sm font-semibold" onClick={() => setMobileOpen(false)}>Contact</Link>
+          </div>
+        </div>
+
+        {/* Sticky quick-contact footer — always reachable, never clipped */}
+        <div className="shrink-0 border-t border-white/10 p-4 grid grid-cols-2 gap-3 bg-primary-dark pb-[max(1rem,env(safe-area-inset-bottom))]">
+          <a
+            href={site.whatsapp.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center justify-center gap-2 py-3.5 rounded-xl bg-[#25D366] text-white text-sm font-bold active:scale-[0.98] transition-transform"
+            onClick={() => setMobileOpen(false)}
+          >
+            <MessageCircle className="w-4 h-4" /> WhatsApp
+          </a>
+          <a
+            href={site.telHref}
+            className="flex items-center justify-center gap-2 py-3.5 rounded-xl bg-white/10 border border-white/15 text-white text-sm font-bold active:scale-[0.98] transition-transform"
+            onClick={() => setMobileOpen(false)}
+          >
+            <Phone className="w-4 h-4" /> Call
+          </a>
+        </div>
+      </div>
     </>
   );
 }

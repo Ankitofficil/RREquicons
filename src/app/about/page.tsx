@@ -23,7 +23,7 @@ export default function AboutPage() {
     <>
       <HeroSection title="A Decade of Building Trust, One Project at a Time." compact />
 
-      <section className="py-14 sm:py-24 bg-white construction-grid">
+      <section className="py-14 sm:py-24 bg-page construction-grid">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <ScrollReveal>
             <SectionHeading title="Our Story" tag="Since 2013" centered={false} />
@@ -61,7 +61,7 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <section className="py-14 sm:py-24 bg-white">
+      <section className="py-14 sm:py-24 bg-page">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <ScrollReveal>
             <SectionHeading title="What Makes Us Different" tag="Our Edge" centered={false} />
