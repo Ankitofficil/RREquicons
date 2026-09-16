@@ -1,10 +1,16 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  // Emits .next/standalone with a self-contained server.js and only the
-  // node_modules actually traced as needed. Hostinger's Node.js app hosting
-  // runs that file directly, so we never ship the full node_modules tree.
-  output: "standalone",
+  // Only when building the self-contained upload bundle (npm run
+  // deploy:package, which sets BUILD_STANDALONE=1). That emits
+  // .next/standalone with its own server.js and a trimmed node_modules.
+  //
+  // Hostinger's "Deploy Web App" builds from the repo and starts the app with
+  // `npm start` (= next start), which expects a normal build — so the default
+  // build stays non-standalone.
+  ...(process.env.BUILD_STANDALONE === "1"
+    ? { output: "standalone" as const }
+    : {}),
 
   // Don't advertise the framework to attackers/scanners.
   poweredByHeader: false,

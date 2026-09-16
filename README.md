@@ -29,15 +29,18 @@ error — everything else still works.
 ## Deployment
 
 The site needs a Node server (the `/api/contact` route sends email), so it
-cannot be hosted as static files. See **[DEPLOYMENT.md](DEPLOYMENT.md)** for
-the Hostinger setup.
+cannot be served as static files. See **[DEPLOYMENT.md](DEPLOYMENT.md)**.
 
-```bash
-NEXT_PUBLIC_SITE_URL=https://yourdomain.com npm run deploy:package
-```
+Deployed via Hostinger's **Deploy Web App**, which builds from this repo on
+every push to `main` (`npm install` → `npm run build` → `npm start`).
 
-`NEXT_PUBLIC_SITE_URL` must be set **at build time** — it is inlined into the
-prerendered HTML, `robots.txt`, and `sitemap.xml`.
+`npm run deploy:package` is the fallback: it produces a self-contained bundle
+in `./deploy` for manual upload, and is the only thing that turns on
+`output: "standalone"` (via `BUILD_STANDALONE=1`).
+
+`NEXT_PUBLIC_SITE_URL` is read **at build time** — it is inlined into the
+prerendered HTML, `robots.txt`, and `sitemap.xml`, so it must be set in the
+host's environment before the build.
 
 ## Project layout
 

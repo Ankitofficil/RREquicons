@@ -47,7 +47,14 @@ if (!process.argv.includes("--skip-build")) {
   rmSync(path.join(root, ".next"), { recursive: true, force: true });
 
   console.log("→ Building (next build)...");
-  execSync("npx next build", { stdio: "inherit", cwd: root });
+  // BUILD_STANDALONE switches on output: "standalone" in next.config.ts —
+  // only this bundle needs it, so a plain `npm run build` stays compatible
+  // with `next start` on a managed host.
+  execSync("npx next build", {
+    stdio: "inherit",
+    cwd: root,
+    env: { ...process.env, BUILD_STANDALONE: "1" },
+  });
 }
 
 if (!existsSync(standalone)) {
