@@ -163,6 +163,7 @@ Applies to both methods — set them in the platform, never in a committed file.
 | ---------------------- | -------------------------------------- |
 | `NEXT_PUBLIC_SITE_URL` | `https://rrequicons.com`               |
 | `NODE_ENV`             | `production`                           |
+| `NEXT_PUBLIC_GA_ID`    | optional — defaults to `G-CG9ZX6V7LX`  |
 | `SMTP_HOST`            | `smtp.hostinger.com`                   |
 | `SMTP_PORT`            | `465`                                  |
 | `SMTP_USER`            | `info@rrequicons.com`                  |
@@ -174,6 +175,10 @@ Applies to both methods — set them in the platform, never in a committed file.
 inlined into the prerendered HTML (canonical tags, Open Graph URLs,
 `robots.txt`, `sitemap.xml`). Set it before the first build; changing it later
 requires a rebuild. If unset it falls back to `https://rrequicons.com`.
+
+`NEXT_PUBLIC_GA_ID` is also build-time. Analytics is rendered only in
+production builds, so `next dev` never sends traffic to the property; set the
+variable to an empty string to disable it entirely.
 
 The `SMTP_*` values are read at runtime. Create the mailbox first under
 **Emails → Email Accounts**. If SMTP is not configured the site still works —

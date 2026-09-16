@@ -10,6 +10,7 @@
     "deploy:package": "node scripts/package-deploy.mjs"
   },
   "dependencies": {
+    "@next/third-parties": "^16.2.3",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/nodemailer": "^8.0.1",

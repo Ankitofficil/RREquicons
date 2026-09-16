@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import FloatingContact from "@/components/FloatingContact";
+import { GoogleAnalytics } from "@next/third-parties/google";
 import { site, siteUrl } from "@/lib/site";
 import "./globals.css";
 
@@ -15,6 +16,11 @@ const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
 });
+
+// Google Analytics 4 measurement ID. Override per-environment with
+// NEXT_PUBLIC_GA_ID; set it to an empty string to disable analytics entirely.
+const gaId =
+  process.env.NEXT_PUBLIC_GA_ID ?? "G-CG9ZX6V7LX";
 
 // Kept under ~60 characters so Google shows it without truncating.
 const siteTitle = "Ready-Mix Concrete & Construction, Jamshedpur";
@@ -197,6 +203,12 @@ export default function RootLayout({
         <Footer />
         <FloatingContact />
       </body>
+      {/* Loads gtag.js after hydration, so analytics never blocks first paint.
+          Only rendered in production with an ID configured, to keep local and
+          preview traffic out of the reporting. */}
+      {gaId && process.env.NODE_ENV === "production" && (
+        <GoogleAnalytics gaId={gaId} />
+      )}
     </html>
   );
 }
