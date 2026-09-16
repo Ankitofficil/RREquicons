@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import {
   Building2,
@@ -28,6 +29,12 @@ import SectionHeading from "@/components/SectionHeading";
 import ContactForm from "@/components/ContactForm";
 import ScrollReveal from "@/components/ScrollReveal";
 import { site } from "@/lib/site";
+
+// The root layout supplies the title/description/OG for this page; only the
+// canonical is page-specific.
+export const metadata: Metadata = {
+  alternates: { canonical: "/" },
+};
 
 const concreteGrades = [
   "M10", "M15", "M20", "M25", "M30", "M35", "M40", "M45", "M50", "M55", "M60+",

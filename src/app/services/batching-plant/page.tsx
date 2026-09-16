@@ -20,9 +20,16 @@ import ContactForm from "@/components/ContactForm";
 import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "Ready-Mix Concrete (RMC) Supplier in Jamshedpur | Batching Plant",
+  title: "Ready-Mix Concrete (RMC) in Jamshedpur",
   description:
-    "R R Equicons supplies computer-controlled M10–M60+ ready-mix concrete from our own batching plant, delivered on time by our owned transit-mixer fleet across Jamshedpur and Jharkhand.",
+    "Computer-controlled M10–M60+ ready-mix concrete from our own 60 m³/hr batching plant, delivered on time by our transit-mixer fleet across Jamshedpur and Jharkhand.",
+  alternates: { canonical: "/services/batching-plant" },
+  openGraph: {
+    title: "Ready-Mix Concrete (RMC) in Jamshedpur",
+    description:
+      "Computer-controlled M10–M60+ ready-mix concrete from our own 60 m³/hr batching plant, delivered on time by our transit-mixer fleet across Jamshedpur and Jharkhand.",
+    url: "/services/batching-plant",
+  },
 };
 
 const specs = [

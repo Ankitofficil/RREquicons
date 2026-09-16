@@ -4,8 +4,16 @@ import HeroSection from "@/components/HeroSection";
 import ScrollReveal from "@/components/ScrollReveal";
 
 export const metadata: Metadata = {
-  title: "Case Studies",
-  description: "Detailed case studies of R R Equicons projects.",
+  title: "Project Case Studies",
+  description:
+    "How we deliver under pressure — the NH-33 extension finished 15 days early with zero lost-time incidents, on a live traffic corridor, through monsoon season.",
+  alternates: { canonical: "/projects/case-studies" },
+  openGraph: {
+    title: "Project Case Studies",
+    description:
+      "How we deliver under pressure — the NH-33 extension finished 15 days early with zero lost-time incidents, on a live traffic corridor, through monsoon season.",
+    url: "/projects/case-studies",
+  },
 };
 
 const caseStudies = [

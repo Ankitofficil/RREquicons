@@ -7,7 +7,15 @@ import ScrollReveal from "@/components/ScrollReveal";
 
 export const metadata: Metadata = {
   title: "Real Estate Development",
-  description: "R R Equicons real estate vertical — quality-first developments in Jharkhand.",
+  description:
+    "Developments built by the same teams that deliver our EPC projects — reputed architects, liveable layouts, and clear pricing, timelines and documentation.",
+  alternates: { canonical: "/services/real-estate" },
+  openGraph: {
+    title: "Real Estate Development",
+    description:
+      "Developments built by the same teams that deliver our EPC projects — reputed architects, liveable layouts, and clear pricing, timelines and documentation.",
+    url: "/services/real-estate",
+  },
 };
 
 const approach = [

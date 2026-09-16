@@ -6,9 +6,16 @@ import SectionHeading from "@/components/SectionHeading";
 import ScrollReveal from "@/components/ScrollReveal";
 
 export const metadata: Metadata = {
-  title: "About R R Equicons | Civil Construction Company in Jamshedpur",
+  title: "Construction Company in Jamshedpur",
   description:
-    "Learn about R R Equicons Pvt Ltd — our journey since 2013, leadership, capabilities, and commitment to quality construction across India.",
+    "Civil construction, EPC and ready-mix concrete across Jharkhand since 2013 — owned equipment fleet, in-house batching plant, ISO-aligned QHSE systems.",
+  alternates: { canonical: "/about" },
+  openGraph: {
+    title: "Construction Company in Jamshedpur",
+    description:
+      "Civil construction, EPC and ready-mix concrete across Jharkhand since 2013 — owned equipment fleet, in-house batching plant, ISO-aligned QHSE systems.",
+    url: "/about",
+  },
 };
 
 const numbers = [

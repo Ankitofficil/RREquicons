@@ -6,7 +6,15 @@ import QuickContactCTA from "@/components/QuickContactCTA";
 
 export const metadata: Metadata = {
   title: "Transport & Logistics",
-  description: "R R Equicons provides reliable heavy transport and logistics services.",
+  description:
+    "Hyva dumpers from 10 to 25 tonnes and heavy trailers moving aggregates, steel, structural materials and machinery to sites across Jharkhand and beyond.",
+  alternates: { canonical: "/services/transport" },
+  openGraph: {
+    title: "Transport & Logistics",
+    description:
+      "Hyva dumpers from 10 to 25 tonnes and heavy trailers moving aggregates, steel, structural materials and machinery to sites across Jharkhand and beyond.",
+    url: "/services/transport",
+  },
 };
 
 const fleet = ["Hyva Dumpers (10-25 ton capacity)", "Tippers", "Trailers for heavy equipment movement", "Transit mixers", "Material transport trucks"];

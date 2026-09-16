@@ -4,8 +4,16 @@ import HeroSection from "@/components/HeroSection";
 import ScrollReveal from "@/components/ScrollReveal";
 
 export const metadata: Metadata = {
-  title: "Quality, Health, Safety & Environment (QHSE)",
-  description: "R R Equicons' commitment to QHSE aligned with ISO standards.",
+  title: "Quality, Health, Safety & Environment",
+  description:
+    "ISO-aligned QHSE: material testing at NABL-accredited labs, multi-stage QC checkpoints, documented inspection and test plans, third-party audits on major works.",
+  alternates: { canonical: "/about/qhse" },
+  openGraph: {
+    title: "Quality, Health, Safety & Environment",
+    description:
+      "ISO-aligned QHSE: material testing at NABL-accredited labs, multi-stage QC checkpoints, documented inspection and test plans, third-party audits on major works.",
+    url: "/about/qhse",
+  },
 };
 
 const sections = [

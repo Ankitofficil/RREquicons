@@ -5,7 +5,15 @@ import ScrollReveal from "@/components/ScrollReveal";
 
 export const metadata: Metadata = {
   title: "Vision, Mission & Values",
-  description: "Discover the vision, mission, and core values that drive R R Equicons Pvt Ltd.",
+  description:
+    "What drives R R Equicons — honouring commitments to clients and communities, sending every worker home safe, and holding to quality even where it is invisible.",
+  alternates: { canonical: "/about/vision-mission" },
+  openGraph: {
+    title: "Vision, Mission & Values",
+    description:
+      "What drives R R Equicons — honouring commitments to clients and communities, sending every worker home safe, and holding to quality even where it is invisible.",
+    url: "/about/vision-mission",
+  },
 };
 
 const values = [

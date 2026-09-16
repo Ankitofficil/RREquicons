@@ -7,8 +7,16 @@ import ScrollReveal from "@/components/ScrollReveal";
 import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "Contact R R Equicons Pvt Ltd | Construction Company in Jamshedpur",
-  description: "Get in touch with R R Equicons for construction services, EPC projects, RMC supply, and more. Office in Jugsalai, Jamshedpur. Quick response guaranteed.",
+  title: "Contact Us",
+  description:
+    "Get a quote for ready-mix concrete, civil construction, EPC work or transport. Office in Jugsalai, Jamshedpur — we reply the same working day.",
+  alternates: { canonical: "/contact" },
+  openGraph: {
+    title: "Contact Us",
+    description:
+      "Get a quote for ready-mix concrete, civil construction, EPC work or transport. Office in Jugsalai, Jamshedpur — we reply the same working day.",
+    url: "/contact",
+  },
 };
 
 const contactCards = [

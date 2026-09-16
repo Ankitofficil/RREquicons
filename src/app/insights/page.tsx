@@ -5,7 +5,15 @@ import ScrollReveal from "@/components/ScrollReveal";
 
 export const metadata: Metadata = {
   title: "Insights & News",
-  description: "Industry insights, project stories, technical knowledge, and company news from R R Equicons Pvt Ltd.",
+  description:
+    "Industry insights and project stories — the infrastructure push in eastern India, how we deliver highway projects, and a practical guide to concrete grades.",
+  alternates: { canonical: "/insights" },
+  openGraph: {
+    title: "Insights & News",
+    description:
+      "Industry insights and project stories — the infrastructure push in eastern India, how we deliver highway projects, and a practical guide to concrete grades.",
+    url: "/insights",
+  },
 };
 
 const categories = ["All", "Industry Insights", "Project Stories", "Technical Knowledge", "Company News"];

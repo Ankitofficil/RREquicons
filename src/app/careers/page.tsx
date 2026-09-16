@@ -7,8 +7,16 @@ import ContactForm from "@/components/ContactForm";
 import ScrollReveal from "@/components/ScrollReveal";
 
 export const metadata: Metadata = {
-  title: "Careers at R R Equicons | Construction Jobs in Jamshedpur & PAN India",
-  description: "Build your career with one of Jharkhand's leading construction companies. Explore current openings for civil engineers, project managers, and skilled professionals.",
+  title: "Careers & Construction Jobs",
+  description:
+    "Openings for civil engineers, project managers, site supervisors and skilled trades with an established Jharkhand construction company. Jamshedpur & PAN India.",
+  alternates: { canonical: "/careers" },
+  openGraph: {
+    title: "Careers & Construction Jobs",
+    description:
+      "Openings for civil engineers, project managers, site supervisors and skilled trades with an established Jharkhand construction company. Jamshedpur & PAN India.",
+    url: "/careers",
+  },
 };
 
 const benefits = [

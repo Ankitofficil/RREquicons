@@ -6,8 +6,16 @@ import SectionHeading from "@/components/SectionHeading";
 import ScrollReveal from "@/components/ScrollReveal";
 
 export const metadata: Metadata = {
-  title: "EPC Projects",
-  description: "R R Equicons offers end-to-end EPC services for roads, bridges, buildings, and industrial infrastructure.",
+  title: "EPC Contractor",
+  description:
+    "End-to-end EPC for highways, bridges, buildings and industrial infrastructure — one point of accountability, overlapping design and build, fixed-price options.",
+  alternates: { canonical: "/projects/epc" },
+  openGraph: {
+    title: "EPC Contractor",
+    description:
+      "End-to-end EPC for highways, bridges, buildings and industrial infrastructure — one point of accountability, overlapping design and build, fixed-price options.",
+    url: "/projects/epc",
+  },
 };
 
 const whyUs = [

@@ -6,7 +6,15 @@ import QuickContactCTA from "@/components/QuickContactCTA";
 
 export const metadata: Metadata = {
   title: "Civil Construction Services",
-  description: "R R Equicons offers comprehensive civil construction services across India.",
+  description:
+    "Bituminous, concrete, WBM and GSB roads, RCC structures from foundation to finishing, bridges engineered for load and span, and industrial drainage systems.",
+  alternates: { canonical: "/services/construction" },
+  openGraph: {
+    title: "Civil Construction Services",
+    description:
+      "Bituminous, concrete, WBM and GSB roads, RCC structures from foundation to finishing, bridges engineered for load and span, and industrial drainage systems.",
+    url: "/services/construction",
+  },
 };
 
 const services = [

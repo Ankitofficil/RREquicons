@@ -6,7 +6,15 @@ import ScrollReveal from "@/components/ScrollReveal";
 
 export const metadata: Metadata = {
   title: "Leadership & Management",
-  description: "Meet the leadership team at R R Equicons Pvt Ltd.",
+  description:
+    "The team behind R R Equicons: PMP-certified project managers, site engineers for roads and infrastructure, quantity surveyors and trained safety officers.",
+  alternates: { canonical: "/about/leadership" },
+  openGraph: {
+    title: "Leadership & Management",
+    description:
+      "The team behind R R Equicons: PMP-certified project managers, site engineers for roads and infrastructure, quantity surveyors and trained safety officers.",
+    url: "/about/leadership",
+  },
 };
 
 const directors = [

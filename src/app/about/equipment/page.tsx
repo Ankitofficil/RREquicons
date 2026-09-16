@@ -4,8 +4,16 @@ import HeroSection from "@/components/HeroSection";
 import ScrollReveal from "@/components/ScrollReveal";
 
 export const metadata: Metadata = {
-  title: "Equipment & Resources",
-  description: "R R Equicons' owned fleet of construction equipment.",
+  title: "Equipment & Fleet",
+  description:
+    "Our owned fleet — TATA Hitachi excavators, tower and mobile cranes, computer-controlled batching plants, transit mixers — so work never waits on hired plant.",
+  alternates: { canonical: "/about/equipment" },
+  openGraph: {
+    title: "Equipment & Fleet",
+    description:
+      "Our owned fleet — TATA Hitachi excavators, tower and mobile cranes, computer-controlled batching plants, transit mixers — so work never waits on hired plant.",
+    url: "/about/equipment",
+  },
 };
 
 const categories = [

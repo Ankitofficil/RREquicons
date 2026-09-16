@@ -16,23 +16,25 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-const siteTitle =
-  "R R Equicons Pvt Ltd | Ready-Mix Concrete & Civil Construction, Jamshedpur";
+// Kept under ~60 characters so Google shows it without truncating.
+const siteTitle = "Ready-Mix Concrete & Construction, Jamshedpur";
 const siteDescription =
-  "Ready-Mix Concrete (RMC) supplier and civil construction company in Jamshedpur. Computer-controlled M10–M60+ concrete from our own batching plant, delivered on time by our owned transit-mixer fleet across Jharkhand.";
+  "Ready-Mix Concrete supplier and civil construction company in Jamshedpur. M10–M60+ concrete from our own batching plant, delivered by our transit-mixer fleet.";
 
 export const metadata: Metadata = {
   // Resolves all relative URLs below (and in per-page metadata) to absolute
   // ones — required for valid Open Graph / canonical tags in production.
   metadataBase: new URL(siteUrl),
   title: {
-    default: siteTitle,
+    // `default` bypasses `template`, so the homepage title carries the brand
+    // itself. Child pages get "<their title> | R R Equicons Pvt Ltd".
+    default: `R R Equicons | ${siteTitle}`,
     template: "%s | R R Equicons Pvt Ltd",
   },
   description: siteDescription,
-  alternates: {
-    canonical: "/",
-  },
+  // No canonical here on purpose: metadata is inherited, so a canonical set
+  // in the root layout would make every page claim to be the homepage and
+  // stop the inner pages being indexed. Each page sets its own.
   openGraph: {
     type: "website",
     siteName: site.name,
@@ -97,7 +99,6 @@ const themeInitScript = `
 // Structured data so search engines can show the company as a local business
 // (address, phone, hours) in rich results.
 const structuredData = {
-  "@context": "https://schema.org",
   "@type": "GeneralContractor",
   name: site.name,
   description: siteDescription,
@@ -113,8 +114,58 @@ const structuredData = {
     postalCode: "831006",
     addressCountry: "IN",
   },
-  areaServed: { "@type": "State", name: "Jharkhand" },
-  openingHours: "Mo-Sa 09:30-18:30",
+  areaServed: [
+    { "@type": "State", name: "Jharkhand" },
+    { "@type": "State", name: "Bihar" },
+    { "@type": "City", name: "Jamshedpur" },
+  ],
+  openingHoursSpecification: [
+    {
+      "@type": "OpeningHoursSpecification",
+      dayOfWeek: [
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+        "Saturday",
+      ],
+      opens: "09:30",
+      closes: "18:30",
+    },
+  ],
+  foundingDate: "2013",
+  knowsAbout: [
+    "Ready-Mix Concrete",
+    "Civil Construction",
+    "EPC Contracting",
+    "Road Construction",
+    "Bridge Construction",
+  ],
+  hasOfferCatalog: {
+    "@type": "OfferCatalog",
+    name: "Services",
+    itemListElement: [
+      ["Ready-Mix Concrete (RMC) Supply", "/services/batching-plant"],
+      ["Civil Construction", "/services/construction"],
+      ["Transport & Logistics", "/services/transport"],
+      ["Real Estate Development", "/services/real-estate"],
+      ["EPC Contracting", "/projects/epc"],
+    ].map(([name, path]) => ({
+      "@type": "Offer",
+      itemOffered: { "@type": "Service", name, url: `${siteUrl}${path}` },
+    })),
+  },
+};
+
+// Names the site itself, so search engines can attribute pages to one entity
+// rather than treating each as standalone.
+const websiteData = {
+  "@type": "WebSite",
+  name: site.name,
+  url: siteUrl,
+  publisher: { "@type": "Organization", name: site.name },
+  inLanguage: "en-IN",
 };
 
 export default function RootLayout({
@@ -132,7 +183,12 @@ export default function RootLayout({
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@graph": [structuredData, websiteData],
+            }),
+          }}
         />
       </head>
       <body className="min-h-full flex flex-col">
