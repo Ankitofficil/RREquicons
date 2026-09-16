@@ -184,6 +184,20 @@ Never commit these: `.env` and `.env*.local` are gitignored.
 
 ## Notes
 
+- **Build-time packages live in `dependencies`, not `devDependencies`.**
+  Hostinger installs with `--omit=dev`, so anything `next build` needs must be
+  a regular dependency: `@tailwindcss/postcss` and `tailwindcss` (PostCSS
+  compiles `globals.css`), plus `typescript` and the `@types/*` packages (the
+  build type-checks). Moving them back to `devDependencies` breaks the deploy
+  with `Cannot find module '@tailwindcss/postcss'`. Only genuinely
+  local-only tools — `eslint`, `puppeteer` — belong in `devDependencies`.
+
+  To reproduce a host build locally:
+
+  ```bash
+  npm install --omit=dev && npm run build
+  ```
+
 - **Image optimization / `sharp`.** `next build` only traces the native `sharp`
   binary for the machine that ran it, so a Windows- or macOS-built bundle would
   silently serve unoptimized full-size images on Hostinger's Linux server.
@@ -210,5 +224,6 @@ Never commit these: `.env` and `.env*.local` are gitignored.
 | Unstyled page / CSS 404s         | Method B: `.next/static` missing — re-upload `.next`  |
 | 503 from the contact form        | SMTP env vars not set or wrong                       |
 | Wrong domain in sitemap/OG       | Built without `NEXT_PUBLIC_SITE_URL`; set it and rebuild |
+| `Cannot find module '@tailwindcss/postcss'` during build | A build-time package slipped into `devDependencies` — the host installs with `--omit=dev`. See Notes. |
 | `Cannot find module` on start    | Method B: `node_modules` partially uploaded          |
 | App won't start                  | Node 20+; Method B's startup file must be `server.js` |
