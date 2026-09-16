@@ -8,8 +8,16 @@
 const phoneDisplay = "+91 84570 04176";
 const phoneE164 = "918457004176"; // used for wa.me / tel: links
 
+// Canonical public origin, used for absolute URLs in metadata, the sitemap
+// and robots.txt. Override per-environment with NEXT_PUBLIC_SITE_URL (no
+// trailing slash), e.g. https://rrequiconspvtltd.com
+export const siteUrl = (
+  process.env.NEXT_PUBLIC_SITE_URL ?? "https://rrequiconspvtltd.com"
+).replace(/[/]$/, "");
+
 export const site = {
   name: "R R Equicons Pvt Ltd",
+  url: siteUrl,
   tagline: "Ready-Mix Concrete & Civil Construction",
   phone: phoneDisplay,
   phoneE164,

@@ -49,6 +49,8 @@ export default function Footer() {
                   alt="R R Equicons Pvt Ltd"
                   width={540}
                   height={400}
+                  // Rendered ~65px wide (h-12 at a 1.35 ratio).
+                  sizes="80px"
                   className="h-12 w-auto"
                 />
               </div>

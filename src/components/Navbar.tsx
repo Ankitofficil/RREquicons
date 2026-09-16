@@ -145,6 +145,9 @@ export default function Navbar() {
                   width={540}
                   height={400}
                   priority
+                  // Rendered ~54px wide (h-10 at a 1.35 ratio); without this
+                  // Next serves a 640px variant of a 1070px source.
+                  sizes="64px"
                   className="h-8 sm:h-10 w-auto"
                 />
               </div>
@@ -239,7 +242,7 @@ export default function Navbar() {
         {/* Panel header */}
         <div className="flex items-center justify-between h-16 px-4 border-b border-white/10 shrink-0">
           <div className="bg-white rounded-xl px-2.5 py-1.5 shadow-lg shadow-black/10">
-            <Image src="/rr-equicons-hq.png" alt="R R Equicons Pvt Ltd" width={540} height={400} className="h-8 w-auto" />
+            <Image src="/rr-equicons-hq.png" alt="R R Equicons Pvt Ltd" width={540} height={400} sizes="64px" className="h-8 w-auto" />
           </div>
           <button
             onClick={() => setMobileOpen(false)}

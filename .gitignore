@@ -37,3 +37,6 @@ screenshots/
 
 # local dev server log
 dev.log
+
+# deployment bundle (generated)
+deploy/

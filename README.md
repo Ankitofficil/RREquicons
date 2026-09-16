@@ -1,36 +1,57 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# R R Equicons Pvt Ltd — Website
 
-## Getting Started
+Marketing site for R R Equicons Pvt Ltd (Jamshedpur) — Ready-Mix Concrete,
+civil construction, transport, and real estate.
 
-First, run the development server:
+Built with Next.js 16 (App Router) and Tailwind CSS 4.
+
+## Local development
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run dev          # http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+To test the contact form locally, copy `.env.example` to `.env.local` and fill
+in the SMTP values. Without them the form returns a 503 and shows a friendly
+error — everything else still works.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Scripts
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Command                  | Purpose                                              |
+| ------------------------ | ---------------------------------------------------- |
+| `npm run dev`            | Dev server                                           |
+| `npm run build`          | Production build                                     |
+| `npm start`              | Serve the production build locally                   |
+| `npm run lint`           | ESLint                                               |
+| `npm run deploy:package` | Build + assemble the upload bundle in `./deploy`     |
 
-## Learn More
+## Deployment
 
-To learn more about Next.js, take a look at the following resources:
+The site needs a Node server (the `/api/contact` route sends email), so it
+cannot be hosted as static files. See **[DEPLOYMENT.md](DEPLOYMENT.md)** for
+the Hostinger setup.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+NEXT_PUBLIC_SITE_URL=https://yourdomain.com npm run deploy:package
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+`NEXT_PUBLIC_SITE_URL` must be set **at build time** — it is inlined into the
+prerendered HTML, `robots.txt`, and `sitemap.xml`.
 
-## Deploy on Vercel
+## Project layout
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```
+src/app/          routes (App Router), plus sitemap.ts / robots.ts
+src/components/   shared UI (Navbar, Footer, ContactForm, …)
+src/lib/site.ts   single source of truth for contact details + site URL
+public/           images
+scripts/          deployment packaging
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Editing content
+
+- **Contact details / address / phone** — `src/lib/site.ts` (propagates
+  everywhere, including the structured data in `src/app/layout.tsx`)
+- **New page** — add it under `src/app/`, then register the path in
+  `src/app/sitemap.ts`

@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import FloatingContact from "@/components/FloatingContact";
+import { site, siteUrl } from "@/lib/site";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -15,13 +16,50 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const siteTitle =
+  "R R Equicons Pvt Ltd | Ready-Mix Concrete & Civil Construction, Jamshedpur";
+const siteDescription =
+  "Ready-Mix Concrete (RMC) supplier and civil construction company in Jamshedpur. Computer-controlled M10–M60+ concrete from our own batching plant, delivered on time by our owned transit-mixer fleet across Jharkhand.";
+
 export const metadata: Metadata = {
+  // Resolves all relative URLs below (and in per-page metadata) to absolute
+  // ones — required for valid Open Graph / canonical tags in production.
+  metadataBase: new URL(siteUrl),
   title: {
-    default: "R R Equicons Pvt Ltd | Ready-Mix Concrete & Civil Construction, Jamshedpur",
+    default: siteTitle,
     template: "%s | R R Equicons Pvt Ltd",
   },
-  description:
-    "Ready-Mix Concrete (RMC) supplier and civil construction company in Jamshedpur. Computer-controlled M10–M60+ concrete from our own batching plant, delivered on time by our owned transit-mixer fleet across Jharkhand.",
+  description: siteDescription,
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    type: "website",
+    siteName: site.name,
+    title: siteTitle,
+    description: siteDescription,
+    url: "/",
+    locale: "en_IN",
+    images: [
+      {
+        url: "/rr-equicons-hq.png",
+        width: 1070,
+        height: 800,
+        alt: `${site.name} — ${site.tagline}`,
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: siteTitle,
+    description: siteDescription,
+    images: ["/rr-equicons-hq.png"],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: { index: true, follow: true, "max-image-preview": "large" },
+  },
   keywords: [
     "ready mix concrete Jamshedpur",
     "RMC supplier Jharkhand",
@@ -56,6 +94,29 @@ const themeInitScript = `
 })();
 `;
 
+// Structured data so search engines can show the company as a local business
+// (address, phone, hours) in rich results.
+const structuredData = {
+  "@context": "https://schema.org",
+  "@type": "GeneralContractor",
+  name: site.name,
+  description: siteDescription,
+  url: siteUrl,
+  telephone: `+${site.phoneE164}`,
+  email: site.email.general,
+  image: `${siteUrl}/rr-equicons-hq.png`,
+  address: {
+    "@type": "PostalAddress",
+    streetAddress: site.address.lines.slice(0, 3).join(", "),
+    addressLocality: "Jamshedpur",
+    addressRegion: "Jharkhand",
+    postalCode: "831006",
+    addressCountry: "IN",
+  },
+  areaServed: { "@type": "State", name: "Jharkhand" },
+  openingHours: "Mo-Sa 09:30-18:30",
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -69,6 +130,10 @@ export default function RootLayout({
     >
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+        />
       </head>
       <body className="min-h-full flex flex-col">
         <Navbar />
