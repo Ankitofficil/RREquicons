@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { getInsights } from "@/lib/content";
 import { Calendar, ArrowRight, Tag } from "lucide-react";
 import HeroSection from "@/components/HeroSection";
 import ScrollReveal from "@/components/ScrollReveal";
@@ -25,16 +26,10 @@ const colorMap: Record<string, string> = {
   "Company News": "from-purple-600/30 to-purple-900/40",
 };
 
-const posts = [
-  { title: "India's Infrastructure Push: What It Means for Eastern India", excerpt: "With the government's continued investment in highways, bridges, and urban infrastructure, eastern India stands to benefit significantly.", category: "Industry Insights", date: "March 15, 2026", readTime: "5 min read" },
-  { title: "Behind the Build: Our Approach to Highway Construction", excerpt: "A look at how we plan, execute, and deliver highway projects — from initial survey to final handover.", category: "Project Stories", date: "February 28, 2026", readTime: "7 min read" },
-  { title: "Understanding Concrete Grades: A Guide for Builders", excerpt: "M10, M20, M40 — what do these grades mean, and how do you choose the right one for your project?", category: "Technical Knowledge", date: "February 10, 2026", readTime: "4 min read" },
-  { title: "R R Equicons Expands Equipment Fleet for FY 2026-27", excerpt: "We've added new excavators, transit mixers, and paver finishers to our fleet — strengthening our capacity.", category: "Company News", date: "January 20, 2026", readTime: "3 min read" },
-  { title: "Safety Culture in Construction: More Than Just PPE", excerpt: "Building a true safety culture goes beyond compliance. Here's how we embed safety into every decision.", category: "Industry Insights", date: "January 5, 2026", readTime: "6 min read" },
-  { title: "The EPC Model: Why More Clients Are Choosing Turnkey Contractors", excerpt: "Engineering, Procurement, and Construction is gaining traction in India. We explore why.", category: "Technical Knowledge", date: "December 18, 2025", readTime: "5 min read" },
-];
 
-export default function InsightsPage() {
+
+export default async function InsightsPage() {
+  const posts = await getInsights();
   return (
     <>
       <HeroSection

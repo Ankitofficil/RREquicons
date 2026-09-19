@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { getCaseStudies } from "@/lib/content";
 import { MapPin, Calendar, Target, CheckCircle } from "lucide-react";
 import HeroSection from "@/components/HeroSection";
 import ScrollReveal from "@/components/ScrollReveal";
@@ -16,54 +17,10 @@ export const metadata: Metadata = {
   },
 };
 
-const caseStudies = [
-  {
-    project: "State Highway NH-33 Extension",
-    client: "State PWD, Jharkhand",
-    location: "Ranchi-Jamshedpur Corridor",
-    scope: "24 km bituminous road construction with drainage",
-    duration: "Jan 2022 - Nov 2023",
-    challenge: "Tight timeline with monsoon disruptions and need to maintain traffic flow on an active route during construction.",
-    approach: "Implemented phased construction methodology — working on one lane while keeping traffic flowing on the other. Deployed additional equipment during dry windows to accelerate progress. Used real-time weather monitoring to optimize work scheduling.",
-    outcome: "Completed 15 days ahead of schedule. Zero lost-time incidents. Traffic disruption kept under 20% of projected levels.",
-    color: "from-blue-600 to-blue-800",
-  },
-  {
-    project: "Industrial Complex - Adityapur",
-    client: "Private Industrial Group",
-    location: "Adityapur Industrial Area, Jamshedpur",
-    scope: "Multi-building EPC including factory, warehouse, and admin block",
-    duration: "Mar 2021 - Aug 2022",
-    challenge: "Complex coordination between multiple building types with different structural requirements, all on a shared site with active industrial operations nearby.",
-    approach: "Created a unified project plan with staggered mobilization. Deployed dedicated teams for each building type while sharing equipment across the site. Implemented daily coordination meetings to manage site logistics.",
-    outcome: "Delivered all three buildings within budget. Client expanded the scope mid-project for additional storage facility, accommodated without timeline impact.",
-    color: "from-emerald-600 to-emerald-800",
-  },
-  {
-    project: "Bridge Construction - Subarnarekha River",
-    client: "State PWD, Jharkhand",
-    location: "Subarnarekha River Crossing, Jharkhand",
-    scope: "180m RCC bridge with approach roads",
-    duration: "Jun 2019 - Dec 2021",
-    challenge: "River with unpredictable water levels. Foundation work required during a narrow dry-season window. Remote location with limited access for heavy equipment.",
-    approach: "Pre-positioned all heavy equipment before the dry season. Used coffer dams for foundation work. Established a temporary access road for material delivery. Leveraged our own transit mixers for uninterrupted concrete supply.",
-    outcome: "Foundation work completed in a single dry season (vs. the two seasons typically needed). Bridge load-tested 10% above design specification. Project came in 5% under budget.",
-    color: "from-amber-600 to-amber-800",
-  },
-  {
-    project: "Residential Township Phase I",
-    client: "Real Estate Developer",
-    location: "Jamshedpur",
-    scope: "120 residential units with common amenities",
-    duration: "Feb 2024 - Present (Ongoing)",
-    challenge: "Large-scale residential project with high quality expectations and tight cost controls. Multiple unit types with customization options adding complexity.",
-    approach: "Standardized construction methods while maintaining design flexibility. Set up a dedicated RMC supply line from our batching plant. Implemented a quality-gate system where each unit passes independent inspection.",
-    outcome: "On track for on-time delivery. Quality metrics consistently exceeding benchmarks. RMC from our own plant has reduced concrete costs by 12% vs. market rates.",
-    color: "from-purple-600 to-purple-800",
-  },
-];
 
-export default function CaseStudiesPage() {
+
+export default async function CaseStudiesPage() {
+  const caseStudies = await getCaseStudies();
   return (
     <>
       <HeroSection

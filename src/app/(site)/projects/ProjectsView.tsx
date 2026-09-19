@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import type { Project } from "@/lib/content-types";
+import Image from "next/image";
 import { Building2, MapPin } from "lucide-react";
 import HeroSection from "@/components/HeroSection";
 import ScrollReveal from "@/components/ScrollReveal";
@@ -16,22 +18,9 @@ const colorMap: Record<string, string> = {
   "Institutional": "from-rose-600/30 to-rose-900/40",
 };
 
-const projects = [
-  { name: "State Highway NH-33 Extension", client: "State PWD, Jharkhand", location: "Jharkhand", scope: "Road Construction - 24 km bituminous road", category: "Roads & Highways", status: "Completed", year: "2023" },
-  { name: "Industrial Complex - Adityapur", client: "Private Industrial Group", location: "Jamshedpur", scope: "Multi-building EPC for manufacturing facility", category: "Industrial", status: "Completed", year: "2022" },
-  { name: "Residential Township Phase I", client: "Real Estate Developer", location: "Jamshedpur", scope: "120 Unit residential housing", category: "Residential", status: "Ongoing", year: "2024" },
-  { name: "Bridge Construction - Subarnarekha", client: "State PWD", location: "Jharkhand", scope: "RCC Bridge - 180m span", category: "EPC", status: "Completed", year: "2021" },
-  { name: "Batching Plant Operations", client: "Internal / Multi-client", location: "Gamharia", scope: "60 m³/hr RMC Plant setup & operations", category: "Industrial", status: "Completed", year: "2020" },
-  { name: "Commercial Office Complex", client: "Private Developer", location: "Bistupur", scope: "G+5 Commercial Building", category: "Buildings", status: "Ongoing", year: "2025" },
-  { name: "District Road Upgrade", client: "State Rural Development", location: "Bihar", scope: "15 km road widening & resurfacing", category: "Roads & Highways", status: "Completed", year: "2023" },
-  { name: "Temple Complex Construction", client: "Religious Trust", location: "Deoghar, Jharkhand", scope: "Multi-structure religious campus", category: "Institutional", status: "Completed", year: "2022" },
-  { name: "Warehouse & Logistics Hub", client: "Industrial Client", location: "Adityapur", scope: "20,000 sq ft warehouse facility", category: "Industrial", status: "Completed", year: "2021" },
-  { name: "Staff Housing Colony", client: "PSU Client", location: "Jharkhand", scope: "60 unit staff quarters with amenities", category: "Residential", status: "Completed", year: "2020" },
-  { name: "Flyover Approach Road", client: "National Highways Authority", location: "Jharkhand", scope: "2.5 km approach road construction", category: "EPC", status: "Completed", year: "2023" },
-  { name: "School Building Complex", client: "State Education Dept", location: "Jharkhand", scope: "G+2 school building with playground", category: "Institutional", status: "Completed", year: "2022" },
-];
 
-export default function ProjectsPage() {
+
+export function ProjectsView({ projects }: { projects: Project[] }) {
   const [active, setActive] = useState("All");
   const filtered = active === "All" ? projects : projects.filter((p) => p.category === active);
 
@@ -67,7 +56,18 @@ export default function ProjectsPage() {
               <ScrollReveal key={`${project.name}-${active}`} delay={i * 60}>
                 <div className="group card-premium overflow-hidden h-full">
                   <div className={`h-44 bg-gradient-to-br ${colorMap[project.category] || "from-gray-600/30 to-gray-900/40"} flex items-center justify-center relative`}>
-                    <Building2 className="w-14 h-14 text-white/10" />
+                    {project.image ? (
+                      // Uploaded photos are already cropped to 16:9 at 1600x900.
+                      <Image
+                        src={project.image}
+                        alt={project.name}
+                        fill
+                        sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"
+                        className="object-cover"
+                      />
+                    ) : (
+                      <Building2 className="w-14 h-14 text-white/10" />
+                    )}
                     <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
                     <div className="absolute bottom-3 left-4 right-4 flex items-center justify-between">
                       <span className={`text-[10px] font-bold px-2.5 py-1 rounded-full ${

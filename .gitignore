@@ -40,3 +40,6 @@ dev.log
 
 # deployment bundle (generated)
 deploy/
+
+# admin uploads are committed by the panel, but keep the dir
+!public/uploads/.gitkeep

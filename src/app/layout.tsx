@@ -1,8 +1,5 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
-import FloatingContact from "@/components/FloatingContact";
 import { GoogleAnalytics } from "@next/third-parties/google";
 import { site, siteUrl } from "@/lib/site";
 import "./globals.css";
@@ -197,12 +194,7 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className="min-h-full flex flex-col">
-        <Navbar />
-        <main className="flex-1">{children}</main>
-        <Footer />
-        <FloatingContact />
-      </body>
+      <body className="min-h-full flex flex-col">{children}</body>
       {/* Loads gtag.js after hydration, so analytics never blocks first paint.
           Only rendered in production with an ID configured, to keep local and
           preview traffic out of the reporting. */}
