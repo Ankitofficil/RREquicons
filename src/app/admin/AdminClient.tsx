@@ -99,8 +99,9 @@ export function AdminClient({
       const typing =
         el && (/^(INPUT|TEXTAREA|SELECT)$/.test(el.tagName) || el.isContentEditable);
       if (e.key === "Escape") {
+        // The form owns its own unsaved-changes guard, so Esc must not close
+        // it from out here — otherwise the shortcut discards edits silently.
         if (showKeys) setShowKeys(false);
-        else if (editing) setEditing(null);
         return;
       }
       if (typing || e.altKey || e.ctrlKey || e.metaKey) return;
