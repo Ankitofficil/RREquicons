@@ -1,5 +1,15 @@
 [
   {
+    "name": "abc Extension",
+    "client": "State PWD, Jharkhand",
+    "location": "Jharkhand",
+    "scope": "Road Construction - 24 km bituminous road",
+    "category": "Roads & Highways",
+    "status": "Completed",
+    "year": "2023",
+    "id": "pmubllx21"
+  },
+  {
     "id": "p1",
     "name": "State Highway NH-33 Extension",
     "client": "State PWD, Jharkhand",
@@ -8,7 +18,7 @@
     "category": "Roads & Highways",
     "status": "Completed",
     "year": "2023",
-    "image": "/uploads/project-mublhlv0.webp"
+    "image": null
   },
   {
     "id": "p2",
