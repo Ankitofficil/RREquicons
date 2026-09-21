@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   Plus,
   Pencil,
@@ -13,12 +13,16 @@ import {
   ChevronUp,
   ChevronDown,
   Copy,
+  X,
+  Undo2,
+  SlidersHorizontal,
+  Keyboard,
+  ImageOff,
 } from "lucide-react";
 import { AdminShell, type TabId } from "./AdminShell";
 import { ItemForm } from "./ItemForm";
+import { Dashboard } from "./Dashboard";
 
-// Items are edited as loose records: the three content types share a form
-// pipeline, and each has a different field set.
 type Draft = Record<string, unknown>;
 
 const titleOf = (i: Draft) =>
@@ -31,6 +35,8 @@ const subtitleOf = (t: TabId, i: Draft) =>
       ? [i.client, i.duration].filter(Boolean).join(" · ")
       : [i.category, i.date].filter(Boolean).join(" · ");
 
+const LIST_TABS: TabId[] = ["projects", "case-studies", "insights"];
+
 export function AdminClient({
   initialProjects,
   initialCaseStudies,
@@ -42,14 +48,22 @@ export function AdminClient({
   initialInsights: Draft[];
   github: { ok: boolean; message: string };
 }) {
-  const [tab, setTab] = useState<TabId>("projects");
+  const [tab, setTab] = useState<TabId>("dashboard");
   const [projects, setProjects] = useState<Draft[]>(initialProjects);
   const [caseStudies, setCaseStudies] = useState<Draft[]>(initialCaseStudies);
   const [insights, setInsights] = useState<Draft[]>(initialInsights);
   const [editing, setEditing] = useState<Draft | null>(null);
   const [query, setQuery] = useState("");
-  const [toast, setToast] = useState<{ kind: "ok" | "err"; text: string } | null>(null);
+  const [statusFilter, setStatusFilter] = useState("All");
+  const [toast, setToast] = useState<
+    { kind: "ok" | "err"; text: string; undo?: () => void } | null
+  >(null);
   const [pending, setPending] = useState<string | null>(null);
+  const [movedId, setMovedId] = useState<string | null>(null);
+  const [exitingId, setExitingId] = useState<string | null>(null);
+  const [showKeys, setShowKeys] = useState(false);
+  const searchRef = useRef<HTMLInputElement>(null);
+  const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const lists: Record<string, [Draft[], (v: Draft[]) => void]> = {
     projects: [projects, setProjects],
@@ -57,10 +71,54 @@ export function AdminClient({
     insights: [insights, setInsights],
   };
 
-  function flash(kind: "ok" | "err", text: string) {
-    setToast({ kind, text });
-    setTimeout(() => setToast(null), 5000);
+  // Update a list from inside an async callback, where the captured `lists`
+  // snapshot would otherwise be stale.
+  function setLive(t: TabId, fn: (cur: Draft[]) => Draft[]) {
+    const setter = { projects: setProjects, "case-studies": setCaseStudies, insights: setInsights }[
+      t as "projects" | "case-studies" | "insights"
+    ];
+    setter?.((cur: Draft[]) => fn(cur));
   }
+
+  function flash(
+    kind: "ok" | "err",
+    text: string,
+    undo?: () => void,
+  ) {
+    if (toastTimer.current) clearTimeout(toastTimer.current);
+    setToast({ kind, text, undo });
+    // An undo offer stays up longer — it is useless if it vanishes first.
+    toastTimer.current = setTimeout(() => setToast(null), undo ? 9000 : 4500);
+  }
+
+  // "/" focuses search, "n" starts a new entry — both only on a list tab and
+  // never while typing into a field.
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      const el = e.target as HTMLElement | null;
+      const typing =
+        el && (/^(INPUT|TEXTAREA|SELECT)$/.test(el.tagName) || el.isContentEditable);
+      if (e.key === "Escape") {
+        if (showKeys) setShowKeys(false);
+        else if (editing) setEditing(null);
+        return;
+      }
+      if (typing || e.altKey || e.ctrlKey || e.metaKey) return;
+      if (!LIST_TABS.includes(tab) || editing) return;
+      if (e.key === "/") {
+        e.preventDefault();
+        searchRef.current?.focus();
+      } else if (e.key === "n") {
+        e.preventDefault();
+        setEditing({});
+      } else if (e.key === "?") {
+        e.preventDefault();
+        setShowKeys((s) => !s);
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [tab, editing, showKeys]);
 
   async function save(item: Draft) {
     setPending("save");
@@ -91,7 +149,7 @@ export function AdminClient({
       flash(
         "ok",
         data.committed
-          ? "Saved and pushed to GitHub — live in a minute or two."
+          ? "Saved — live on the site in a minute or two."
           : "Saved locally.",
       );
     } catch {
@@ -102,28 +160,66 @@ export function AdminClient({
   }
 
   async function remove(item: Draft) {
-    if (!confirm(`Delete “${titleOf(item)}”? This cannot be undone.`)) return;
-    setPending(item.id as string);
+    const id = item.id as string;
+    setExitingId(id); // play the exit before the row disappears
+    await new Promise((r) => setTimeout(r, 200));
+
+    const [list, setList] = lists[tab];
+    const index = list.findIndex((i) => i.id === id);
+    setList(list.filter((i) => i.id !== id));
+    setExitingId(null);
+    setPending(id);
+
     try {
       const res = await fetch(
-        `/api/admin/content?type=${tab}&id=${encodeURIComponent(item.id as string)}`,
+        `/api/admin/content?type=${tab}&id=${encodeURIComponent(id)}`,
         { method: "DELETE" },
       );
       const data = (await res.json()) as { error?: string; committed?: boolean };
       if (!res.ok) {
+        setList(list); // put it back
         flash("err", data.error ?? "Could not delete.");
         return;
       }
-      const [list, setList] = lists[tab];
-      setList(list.filter((i) => i.id !== item.id));
-      flash("ok", data.committed ? "Deleted and pushed to GitHub." : "Deleted locally.");
+      // Deleting is the one destructive action here, so offer a way back
+      // instead of a confirm dialog before the fact.
+      flash("ok", `Deleted “${titleOf(item)}”.`, async () => {
+        setToast(null);
+        setPending("save");
+        try {
+          // Re-create it with the same id, so it keeps its photo and any
+          // other stored fields rather than coming back as a new record.
+          const res = await fetch("/api/admin/content", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ type: tab, item }),
+          });
+          if (!res.ok) {
+            flash("err", "Could not restore it.");
+            return;
+          }
+          const data = (await res.json()) as { item?: Draft };
+          const back = data.item ?? item;
+          // Put it back at the position it was deleted from.
+          setLive(tab, (cur) => {
+            const without = cur.filter((i) => i.id !== id);
+            const at = Math.min(Math.max(index, 0), without.length);
+            return [...without.slice(0, at), back, ...without.slice(at)];
+          });
+          flash("ok", "Restored.");
+        } catch {
+          flash("err", "Could not reach the server.");
+        } finally {
+          setPending(null);
+        }
+      });
     } catch {
+      setList(list);
       flash("err", "Could not reach the server.");
     } finally {
       setPending(null);
     }
   }
-
 
   // Ordering matters: the public pages render these lists in array order.
   async function move(item: Draft, delta: number) {
@@ -135,8 +231,9 @@ export function AdminClient({
     const next = [...list];
     [next[from], next[to]] = [next[to], next[from]];
     setList(next); // optimistic — the server persists the same order
+    setMovedId(item.id as string);
+    setTimeout(() => setMovedId(null), 700);
 
-    setPending(item.id as string);
     try {
       const res = await fetch("/api/admin/content", {
         method: "PATCH",
@@ -144,14 +241,12 @@ export function AdminClient({
         body: JSON.stringify({ type: tab, ids: next.map((i) => i.id) }),
       });
       if (!res.ok) {
-        setList(list); // put it back
+        setList(list);
         flash("err", "Could not save the new order.");
       }
     } catch {
       setList(list);
       flash("err", "Could not reach the server.");
-    } finally {
-      setPending(null);
     }
   }
 
@@ -168,25 +263,43 @@ export function AdminClient({
     setEditing(copy);
   }
 
-  const current = tab === "settings" ? [] : lists[tab][0];
-  const filtered = query
-    ? current.filter((i) =>
-        JSON.stringify(i).toLowerCase().includes(query.toLowerCase()),
-      )
-    : current;
+  const current = LIST_TABS.includes(tab) ? lists[tab][0] : [];
+
+  const statuses = useMemo(() => {
+    const s = new Set<string>();
+    current.forEach((i) => typeof i.status === "string" && s.add(i.status));
+    return ["All", ...[...s].sort()];
+  }, [current]);
+
+  const filtered = useMemo(() => {
+    let out = current;
+    if (statusFilter !== "All") out = out.filter((i) => i.status === statusFilter);
+    if (query) {
+      const q = query.toLowerCase();
+      out = out.filter((i) => JSON.stringify(i).toLowerCase().includes(q));
+    }
+    return out;
+  }, [current, query, statusFilter]);
+
+  const counts = {
+    projects: projects.length,
+    "case-studies": caseStudies.length,
+    insights: insights.length,
+  } as Partial<Record<TabId, number>>;
+
+  const goTo = (t: TabId) => {
+    setTab(t);
+    setEditing(null);
+    setQuery("");
+    setStatusFilter("All");
+  };
 
   return (
-    <AdminShell
-      active={tab}
-      onChange={(t) => {
-        setTab(t);
-        setEditing(null);
-        setQuery("");
-      }}
+    <AdminShell active={tab} onChange={goTo} counts={counts}
       status={
         toast && (
           <div
-            className={`px-4 py-2.5 text-sm flex items-center gap-2 ${
+            className={`a-toast px-4 py-2.5 text-sm flex items-center gap-2 ${
               toast.kind === "ok"
                 ? "bg-emerald-50 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-200"
                 : "bg-red-50 text-red-800 dark:bg-red-950 dark:text-red-200"
@@ -197,17 +310,37 @@ export function AdminClient({
             ) : (
               <TriangleAlert className="h-4 w-4 shrink-0" />
             )}
-            {toast.text}
+            <span className="flex-1">{toast.text}</span>
+            {toast.undo && (
+              <button
+                onClick={toast.undo}
+                className="a-btn inline-flex items-center gap-1 font-semibold underline underline-offset-2 hover:opacity-80"
+              >
+                <Undo2 className="h-3.5 w-3.5" />
+                Undo
+              </button>
+            )}
+            <button
+              onClick={() => setToast(null)}
+              aria-label="Dismiss"
+              className="a-btn p-0.5 rounded hover:bg-black/5 dark:hover:bg-white/10"
+            >
+              <X className="h-3.5 w-3.5" />
+            </button>
           </div>
         )
       }
     >
-      {tab === "settings" ? (
-        <Settings github={github} counts={{
-          projects: projects.length,
-          caseStudies: caseStudies.length,
-          insights: insights.length,
-        }} />
+      {tab === "dashboard" ? (
+        <Dashboard
+          projects={projects}
+          caseStudies={caseStudies}
+          insights={insights}
+          github={github}
+          onGo={goTo}
+        />
+      ) : tab === "settings" ? (
+        <SettingsPanel github={github} counts={counts} />
       ) : editing ? (
         <ItemForm
           type={tab}
@@ -218,136 +351,269 @@ export function AdminClient({
         />
       ) : (
         <>
-          <div className="flex flex-wrap items-center gap-3 justify-between mb-5">
+          <div className="flex flex-wrap items-center gap-2.5 justify-between mb-5 a-fade">
             <div className="relative flex-1 min-w-52 max-w-sm">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
               <input
+                ref={searchRef}
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
-                placeholder="Search…"
-                className="w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 pl-9 pr-3 py-2 text-sm text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-900 dark:focus:ring-white"
+                placeholder="Search…  (press /)"
+                className="w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 pl-9 pr-8 py-2 text-sm text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-900 dark:focus:ring-white transition-shadow"
               />
+              {query && (
+                <button
+                  onClick={() => setQuery("")}
+                  aria-label="Clear search"
+                  className="a-btn absolute right-2 top-1/2 -translate-y-1/2 p-1 rounded text-slate-400 hover:text-slate-700 dark:hover:text-white"
+                >
+                  <X className="h-3.5 w-3.5" />
+                </button>
+              )}
             </div>
-            <button
-              onClick={() => setEditing({})}
-              className="inline-flex items-center gap-1.5 rounded-lg bg-slate-900 dark:bg-white px-3.5 py-2 text-sm font-medium text-white dark:text-slate-900 hover:opacity-90"
-            >
-              <Plus className="h-4 w-4" />
-              New
-            </button>
+
+            {statuses.length > 2 && (
+              <div className="flex items-center gap-1.5">
+                <SlidersHorizontal className="h-3.5 w-3.5 text-slate-400" />
+                {statuses.map((s) => (
+                  <button
+                    key={s}
+                    onClick={() => setStatusFilter(s)}
+                    className={`a-btn text-xs px-2.5 py-1.5 rounded-lg font-medium transition-colors ${
+                      statusFilter === s
+                        ? "bg-slate-900 text-white dark:bg-white dark:text-slate-900"
+                        : "text-slate-500 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-800"
+                    }`}
+                  >
+                    {s}
+                  </button>
+                ))}
+              </div>
+            )}
+
+            <div className="flex items-center gap-1.5">
+              <button
+                onClick={() => setShowKeys(true)}
+                title="Keyboard shortcuts (?)"
+                aria-label="Keyboard shortcuts"
+                className="a-btn p-2 rounded-lg text-slate-400 hover:text-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 dark:hover:text-white"
+              >
+                <Keyboard className="h-4 w-4" />
+              </button>
+              <button
+                onClick={() => setEditing({})}
+                className="a-btn inline-flex items-center gap-1.5 rounded-lg bg-slate-900 dark:bg-white px-3.5 py-2 text-sm font-medium text-white dark:text-slate-900 hover:opacity-90 shadow-sm"
+              >
+                <Plus className="h-4 w-4" />
+                New
+              </button>
+            </div>
           </div>
 
-          {filtered.length === 0 ? (
-            <p className="text-sm text-slate-500 py-12 text-center">
-              {query ? "Nothing matches that search." : "Nothing here yet."}
+          {filtered.length !== current.length && (
+            <p className="text-xs text-slate-400 mb-3 a-fade">
+              Showing {filtered.length} of {current.length}
             </p>
+          )}
+
+          {filtered.length === 0 ? (
+            <div className="text-center py-16 a-fade-up">
+              <div className="h-12 w-12 rounded-xl bg-slate-100 dark:bg-slate-800 grid place-items-center mx-auto mb-3">
+                <Search className="h-5 w-5 text-slate-400" />
+              </div>
+              <p className="text-sm font-medium text-slate-700 dark:text-slate-300">
+                {query || statusFilter !== "All"
+                  ? "Nothing matches those filters."
+                  : "Nothing here yet."}
+              </p>
+              <button
+                onClick={() => {
+                  if (query || statusFilter !== "All") {
+                    setQuery("");
+                    setStatusFilter("All");
+                  } else setEditing({});
+                }}
+                className="a-btn mt-3 text-sm font-medium text-slate-900 dark:text-white underline underline-offset-4"
+              >
+                {query || statusFilter !== "All" ? "Clear filters" : "Add the first one"}
+              </button>
+            </div>
           ) : (
-            <ul className="space-y-2">
-              {filtered.map((item) => (
-                <li
-                  key={item.id as string}
-                  className="flex items-center gap-4 rounded-lg bg-white dark:bg-slate-900 ring-1 ring-slate-200 dark:ring-slate-800 p-3"
-                >
-                  {item.image ? (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img
-                      src={item.image as string}
-                      alt=""
-                      className="h-11 w-16 sm:h-12 sm:w-20 rounded object-cover shrink-0 bg-slate-100 dark:bg-slate-800"
-                    />
-                  ) : (
-                    <div className="h-11 w-16 sm:h-12 sm:w-20 rounded bg-slate-100 dark:bg-slate-800 shrink-0" />
-                  )}
-                  <div className="min-w-0 flex-1">
-                    <p className="font-medium text-slate-900 dark:text-white line-clamp-2 sm:truncate">
-                      {titleOf(item)}
-                    </p>
-                    <p className="text-xs text-slate-500 truncate mt-0.5">
-                      {subtitleOf(tab, item)}
-                    </p>
-                  </div>
-                  {typeof item.status === "string" && (
-                    <span
-                      className={`hidden sm:inline text-xs px-2 py-0.5 rounded-full shrink-0 ${
-                        item.status === "Completed"
-                          ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300"
-                          : "bg-amber-100 text-amber-700 dark:bg-amber-950 dark:text-amber-300"
-                      }`}
-                    >
-                      {item.status}
-                    </span>
-                  )}
-                  <div className="flex gap-0.5 shrink-0">
-                    {!query && (
-                      <>
-                        <button
-                          onClick={() => move(item, -1)}
-                          disabled={filtered.indexOf(item) === 0 || pending === item.id}
-                          aria-label="Move up"
-                          title="Move up"
-                          className="p-1.5 rounded-lg text-slate-400 hover:text-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 dark:hover:text-white disabled:opacity-25 disabled:hover:bg-transparent"
-                        >
-                          <ChevronUp className="h-4 w-4" />
-                        </button>
-                        <button
-                          onClick={() => move(item, 1)}
-                          disabled={filtered.indexOf(item) === filtered.length - 1 || pending === item.id}
-                          aria-label="Move down"
-                          title="Move down"
-                          className="p-1.5 rounded-lg text-slate-400 hover:text-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 dark:hover:text-white disabled:opacity-25 disabled:hover:bg-transparent"
-                        >
-                          <ChevronDown className="h-4 w-4" />
-                        </button>
-                      </>
+            <ul className="space-y-2 a-stagger" key={`${tab}-${statusFilter}`}>
+              {filtered.map((item) => {
+                const id = item.id as string;
+                return (
+                  <li
+                    key={id}
+                    className={`a-row grid grid-cols-[auto_1fr_auto] sm:flex sm:items-center gap-x-3 gap-y-2 sm:gap-4 rounded-xl bg-white dark:bg-slate-900 ring-1 ring-slate-200 dark:ring-slate-800 p-3 ${
+                      movedId === id ? "a-moved" : ""
+                    } ${exitingId === id ? "a-exiting" : ""}`}
+                  >
+                    {item.image ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        src={item.image as string}
+                        alt=""
+                        loading="lazy"
+                        className="h-11 w-16 sm:h-12 sm:w-20 rounded-lg object-cover shrink-0 bg-slate-100 dark:bg-slate-800"
+                      />
+                    ) : (
+                      <div
+                        title="No photo yet"
+                        className="h-11 w-16 sm:h-12 sm:w-20 rounded-lg bg-slate-100 dark:bg-slate-800 shrink-0 grid place-items-center"
+                      >
+                        <ImageOff className="h-4 w-4 text-slate-300 dark:text-slate-600" />
+                      </div>
                     )}
-                    <button
-                      onClick={() => duplicate(item)}
-                      aria-label={`Duplicate ${titleOf(item)}`}
-                      title="Duplicate"
-                      className="hidden sm:inline-flex p-2 rounded-lg text-slate-500 hover:text-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 dark:hover:text-white"
-                    >
-                      <Copy className="h-4 w-4" />
-                    </button>
+
                     <button
                       onClick={() => setEditing(item)}
-                      aria-label={`Edit ${titleOf(item)}`}
-                      className="p-2 rounded-lg text-slate-500 hover:text-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 dark:hover:text-white"
+                      className="min-w-0 sm:flex-1 text-left"
                     >
-                      <Pencil className="h-4 w-4" />
+                      <p className="font-medium text-slate-900 dark:text-white line-clamp-2 sm:truncate">
+                        {titleOf(item)}
+                      </p>
+                      <p className="text-xs text-slate-500 truncate mt-0.5">
+                        {subtitleOf(tab, item)}
+                      </p>
                     </button>
-                    <button
-                      onClick={() => remove(item)}
-                      disabled={pending === item.id}
-                      aria-label={`Delete ${titleOf(item)}`}
-                      className="p-2 rounded-lg text-slate-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950 disabled:opacity-50"
-                    >
-                      {pending === item.id ? (
-                        <LoaderCircle className="h-4 w-4 animate-spin" />
-                      ) : (
-                        <Trash2 className="h-4 w-4" />
+
+                    {typeof item.status === "string" && (
+                      <span
+                        className={`self-start sm:self-auto text-[10px] sm:text-xs px-2 py-0.5 rounded-full shrink-0 font-medium ${
+                          item.status === "Completed"
+                            ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300"
+                            : item.status === "Ongoing"
+                              ? "bg-amber-100 text-amber-700 dark:bg-amber-950 dark:text-amber-300"
+                              : "bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400"
+                        }`}
+                      >
+                        {item.status}
+                      </span>
+                    )}
+
+                    <div className="a-actions col-span-3 sm:col-auto flex gap-0.5 shrink-0 justify-end border-t sm:border-0 border-slate-100 dark:border-slate-800 pt-2 sm:pt-0 -mx-1 sm:mx-0">
+                      {!query && statusFilter === "All" && (
+                        <>
+                          <button
+                            onClick={() => move(item, -1)}
+                            disabled={filtered.indexOf(item) === 0}
+                            aria-label="Move up"
+                            title="Move up"
+                            className="a-btn p-1.5 rounded-lg text-slate-400 hover:text-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 dark:hover:text-white disabled:opacity-25 disabled:hover:bg-transparent"
+                          >
+                            <ChevronUp className="h-4 w-4" />
+                          </button>
+                          <button
+                            onClick={() => move(item, 1)}
+                            disabled={filtered.indexOf(item) === filtered.length - 1}
+                            aria-label="Move down"
+                            title="Move down"
+                            className="a-btn p-1.5 rounded-lg text-slate-400 hover:text-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 dark:hover:text-white disabled:opacity-25 disabled:hover:bg-transparent"
+                          >
+                            <ChevronDown className="h-4 w-4" />
+                          </button>
+                        </>
                       )}
-                    </button>
-                  </div>
-                </li>
-              ))}
+                      <button
+                        onClick={() => duplicate(item)}
+                        aria-label={`Duplicate ${titleOf(item)}`}
+                        title="Duplicate"
+                        className="a-btn inline-flex p-2 rounded-lg text-slate-500 hover:text-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 dark:hover:text-white"
+                      >
+                        <Copy className="h-4 w-4" />
+                      </button>
+                      <button
+                        onClick={() => setEditing(item)}
+                        aria-label={`Edit ${titleOf(item)}`}
+                        title="Edit"
+                        className="a-btn p-2 rounded-lg text-slate-500 hover:text-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 dark:hover:text-white"
+                      >
+                        <Pencil className="h-4 w-4" />
+                      </button>
+                      <button
+                        onClick={() => remove(item)}
+                        disabled={pending === id}
+                        aria-label={`Delete ${titleOf(item)}`}
+                        title="Delete"
+                        className="a-btn p-2 rounded-lg text-slate-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/50 disabled:opacity-50"
+                      >
+                        {pending === id ? (
+                          <LoaderCircle className="h-4 w-4 animate-spin" />
+                        ) : (
+                          <Trash2 className="h-4 w-4" />
+                        )}
+                      </button>
+                    </div>
+                  </li>
+                );
+              })}
             </ul>
           )}
         </>
       )}
+
+      {showKeys && <ShortcutHelp onClose={() => setShowKeys(false)} />}
     </AdminShell>
   );
 }
 
-function Settings({
+function ShortcutHelp({ onClose }: { onClose: () => void }) {
+  const keys = [
+    ["/", "Focus search"],
+    ["n", "New entry"],
+    ["Esc", "Close form or dialog"],
+    ["Alt + 1…5", "Jump to a tab"],
+    ["?", "This help"],
+  ];
+  return (
+    <div
+      className="fixed inset-0 z-50 grid place-items-center bg-slate-900/40 backdrop-blur-sm a-fade p-4"
+      onClick={onClose}
+    >
+      <div
+        className="a-scale-in w-full max-w-sm rounded-xl bg-white dark:bg-slate-900 ring-1 ring-slate-200 dark:ring-slate-800 p-5 shadow-2xl"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="font-semibold text-slate-900 dark:text-white">
+            Keyboard shortcuts
+          </h2>
+          <button
+            onClick={onClose}
+            aria-label="Close"
+            className="a-btn p-1 rounded-lg text-slate-400 hover:text-slate-900 dark:hover:text-white"
+          >
+            <X className="h-4 w-4" />
+          </button>
+        </div>
+        <dl className="space-y-2">
+          {keys.map(([k, v]) => (
+            <div key={k} className="flex items-center justify-between text-sm">
+              <dt className="text-slate-600 dark:text-slate-400">{v}</dt>
+              <dd>
+                <kbd className="px-2 py-0.5 rounded border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-xs font-mono text-slate-700 dark:text-slate-300">
+                  {k}
+                </kbd>
+              </dd>
+            </div>
+          ))}
+        </dl>
+      </div>
+    </div>
+  );
+}
+
+function SettingsPanel({
   github,
   counts,
 }: {
   github: { ok: boolean; message: string };
-  counts: { projects: number; caseStudies: number; insights: number };
+  counts: Partial<Record<TabId, number>>;
 }) {
   return (
-    <div className="space-y-6 max-w-2xl">
-      <section className="rounded-xl bg-white dark:bg-slate-900 ring-1 ring-slate-200 dark:ring-slate-800 p-5">
+    <div className="space-y-4 max-w-2xl">
+      <section className="rounded-xl bg-white dark:bg-slate-900 ring-1 ring-slate-200 dark:ring-slate-800 p-5 a-fade-up">
         <h2 className="font-semibold text-slate-900 dark:text-white mb-3 flex items-center gap-2">
           <GitBranch className="h-4 w-4" />
           Storage
@@ -355,8 +621,8 @@ function Settings({
         <div
           className={`flex items-start gap-2 text-sm rounded-lg p-3 ${
             github.ok
-              ? "bg-emerald-50 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-200"
-              : "bg-amber-50 text-amber-800 dark:bg-amber-950 dark:text-amber-200"
+              ? "bg-emerald-50 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-200"
+              : "bg-amber-50 text-amber-800 dark:bg-amber-950/60 dark:text-amber-200"
           }`}
         >
           {github.ok ? (
@@ -380,17 +646,40 @@ function Settings({
         </p>
       </section>
 
-      <section className="rounded-xl bg-white dark:bg-slate-900 ring-1 ring-slate-200 dark:ring-slate-800 p-5">
+      <section className="rounded-xl bg-white dark:bg-slate-900 ring-1 ring-slate-200 dark:ring-slate-800 p-5 a-fade-up">
         <h2 className="font-semibold text-slate-900 dark:text-white mb-3">Content</h2>
         <dl className="grid grid-cols-3 gap-4 text-center">
           {[
             ["Projects", counts.projects],
-            ["Case studies", counts.caseStudies],
+            ["Case studies", counts["case-studies"]],
             ["Insights", counts.insights],
           ].map(([label, n]) => (
             <div key={label as string}>
-              <dd className="text-2xl font-semibold text-slate-900 dark:text-white">{n}</dd>
+              <dd className="text-2xl font-semibold text-slate-900 dark:text-white tabular-nums">
+                {n ?? 0}
+              </dd>
               <dt className="text-xs text-slate-500">{label}</dt>
+            </div>
+          ))}
+        </dl>
+      </section>
+
+      <section className="rounded-xl bg-white dark:bg-slate-900 ring-1 ring-slate-200 dark:ring-slate-800 p-5 a-fade-up">
+        <h2 className="font-semibold text-slate-900 dark:text-white mb-3">
+          Photo sizes
+        </h2>
+        <p className="text-xs text-slate-500 mb-3">
+          Uploads are cropped and re-encoded to these, so cards always line up.
+        </p>
+        <dl className="space-y-1.5 text-sm">
+          {[
+            ["Project photos", "16:9 · 1600×900"],
+            ["Case study photos", "4:3 · 1600×1200"],
+            ["Article images", "16:9 · 1600×900"],
+          ].map(([k, v]) => (
+            <div key={k} className="flex justify-between">
+              <dt className="text-slate-600 dark:text-slate-400">{k}</dt>
+              <dd className="font-mono text-xs text-slate-500">{v}</dd>
             </div>
           ))}
         </dl>

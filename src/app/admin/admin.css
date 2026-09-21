@@ -1,0 +1,120 @@
+/* Admin-only motion and surface styles.
+   Scoped under .admin-root so none of it touches the public site. */
+
+.admin-root {
+  --a-ease: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ─── Entrances ─── */
+@keyframes a-fade-up {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: none; }
+}
+@keyframes a-fade {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes a-scale-in {
+  from { opacity: 0; transform: scale(0.97); }
+  to   { opacity: 1; transform: none; }
+}
+@keyframes a-slide-down {
+  from { opacity: 0; transform: translateY(-10px); }
+  to   { opacity: 1; transform: none; }
+}
+
+.admin-root .a-fade-up  { animation: a-fade-up .42s var(--a-ease) both; }
+.admin-root .a-fade     { animation: a-fade .3s ease both; }
+.admin-root .a-scale-in { animation: a-scale-in .28s var(--a-ease) both; }
+.admin-root .a-toast    { animation: a-slide-down .3s var(--a-ease) both; }
+
+/* Staggered list entrance. Rows past the 12th share the last delay —
+   long lists should not feel like they are loading in slow motion. */
+.admin-root .a-stagger > * { animation: a-fade-up .4s var(--a-ease) both; }
+.admin-root .a-stagger > *:nth-child(1)  { animation-delay: .02s }
+.admin-root .a-stagger > *:nth-child(2)  { animation-delay: .04s }
+.admin-root .a-stagger > *:nth-child(3)  { animation-delay: .06s }
+.admin-root .a-stagger > *:nth-child(4)  { animation-delay: .08s }
+.admin-root .a-stagger > *:nth-child(5)  { animation-delay: .10s }
+.admin-root .a-stagger > *:nth-child(6)  { animation-delay: .12s }
+.admin-root .a-stagger > *:nth-child(7)  { animation-delay: .14s }
+.admin-root .a-stagger > *:nth-child(8)  { animation-delay: .16s }
+.admin-root .a-stagger > *:nth-child(9)  { animation-delay: .18s }
+.admin-root .a-stagger > *:nth-child(10) { animation-delay: .20s }
+.admin-root .a-stagger > *:nth-child(11) { animation-delay: .22s }
+.admin-root .a-stagger > *:nth-child(n+12) { animation-delay: .24s }
+
+/* ─── Row interaction ─── */
+.admin-root .a-row {
+  transition:
+    transform .18s var(--a-ease),
+    box-shadow .18s var(--a-ease),
+    border-color .18s var(--a-ease);
+}
+.admin-root .a-row:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgb(0 0 0 / 0.06);
+}
+.dark .admin-root .a-row:hover,
+.admin-root.dark .a-row:hover {
+  box-shadow: 0 4px 16px rgb(0 0 0 / 0.35);
+}
+
+/* Row actions stay out of the way until the row is hovered — on touch
+   (no hover) they are always visible, so nothing becomes unreachable. */
+@media (hover: hover) {
+  .admin-root .a-actions { opacity: .6; transition: opacity .16s ease; }
+  .admin-root .a-row:hover .a-actions,
+  .admin-root .a-row:focus-within .a-actions { opacity: 1; }
+}
+
+/* A row that just moved, so the eye can follow it. */
+@keyframes a-flash {
+  0%   { background-color: rgb(59 130 246 / 0.12); }
+  100% { background-color: transparent; }
+}
+.admin-root .a-moved { animation: a-flash .7s ease both; }
+
+/* A row being removed. */
+@keyframes a-exit {
+  to { opacity: 0; transform: translateX(-10px) scale(0.98); }
+}
+.admin-root .a-exiting { animation: a-exit .22s ease both; pointer-events: none; }
+
+/* ─── Buttons ─── */
+.admin-root .a-btn { transition: transform .14s var(--a-ease), opacity .14s ease; }
+.admin-root .a-btn:active:not(:disabled) { transform: scale(0.97); }
+
+/* ─── Skeleton shimmer, for the upload placeholder ─── */
+@keyframes a-shimmer {
+  to { background-position: 200% 0; }
+}
+.admin-root .a-shimmer {
+  background: linear-gradient(90deg,
+    rgb(148 163 184 / 0.12) 25%,
+    rgb(148 163 184 / 0.22) 37%,
+    rgb(148 163 184 / 0.12) 63%);
+  background-size: 200% 100%;
+  animation: a-shimmer 1.4s linear infinite;
+}
+
+/* Progress bar for uploads. */
+@keyframes a-indeterminate {
+  0%   { transform: translateX(-100%) scaleX(0.4); }
+  100% { transform: translateX(250%)  scaleX(0.4); }
+}
+.admin-root .a-progress { animation: a-indeterminate 1.1s ease-in-out infinite; }
+
+/* Respect the OS setting. Motion is decoration here — the panel must stay
+   fully usable with all of it switched off. */
+@media (prefers-reduced-motion: reduce) {
+  .admin-root *,
+  .admin-root *::before,
+  .admin-root *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+  }
+  .admin-root .a-row:hover { transform: none; }
+  .admin-root .a-actions { opacity: 1 !important; }
+}

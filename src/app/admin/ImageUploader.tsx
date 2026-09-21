@@ -88,7 +88,7 @@ export function ImageUploader({
           style={{ aspectRatio: String(spec.ratio) }}
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={value} alt="" className="w-full h-full object-cover" />
+          <img src={value} alt="" className="a-fade w-full h-full object-cover" />
         </div>
         <div className="flex items-center justify-between">
           <span className="text-xs text-slate-500">
@@ -158,6 +158,12 @@ export function ImageUploader({
           />
         </label>
 
+        {busy && (
+          <div className="h-1 rounded-full bg-slate-200 dark:bg-slate-800 overflow-hidden">
+            <div className="a-progress h-full w-full bg-slate-900 dark:bg-white rounded-full" />
+          </div>
+        )}
+
         {error && <p className="text-xs text-red-600">{error}</p>}
 
         <div className="flex gap-2">
@@ -192,7 +198,7 @@ export function ImageUploader({
       <button
         type="button"
         onClick={() => inputRef.current?.click()}
-        className="w-full rounded-lg border-2 border-dashed border-slate-300 dark:border-slate-700 hover:border-slate-400 dark:hover:border-slate-600 transition p-6 flex flex-col items-center justify-center gap-2 text-slate-500 dark:text-slate-400"
+        className="a-btn w-full rounded-lg border-2 border-dashed border-slate-300 dark:border-slate-700 hover:border-slate-400 dark:hover:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-800/40 transition p-6 flex flex-col items-center justify-center gap-2 text-slate-500 dark:text-slate-400"
         style={{ aspectRatio: String(spec.ratio) }}
       >
         <ImagePlus className="h-6 w-6" />
