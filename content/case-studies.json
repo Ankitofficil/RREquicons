@@ -1,18 +1,5 @@
 [
   {
-    "id": "cs2",
-    "project": "Industrial Complex - Adityapur",
-    "client": "Private Industrial Group",
-    "location": "Adityapur Industrial Area, Jamshedpur",
-    "scope": "Multi-building EPC including factory, warehouse, and admin block",
-    "duration": "Mar 2021 - Aug 2022",
-    "challenge": "Complex coordination between multiple building types with different structural requirements, all on a shared site with active industrial operations nearby.",
-    "approach": "Created a unified project plan with staggered mobilization. Deployed dedicated teams for each building type while sharing equipment across the site. Implemented daily coordination meetings to manage site logistics.",
-    "outcome": "Delivered all three buildings within budget. Client expanded the scope mid-project for additional storage facility, accommodated without timeline impact.",
-    "color": "from-emerald-600 to-emerald-800",
-    "image": null
-  },
-  {
     "id": "cs1",
     "project": "State Highway NH-33 Extension",
     "client": "State PWD, Jharkhand",
@@ -23,6 +10,19 @@
     "approach": "Implemented phased construction methodology — working on one lane while keeping traffic flowing on the other. Deployed additional equipment during dry windows to accelerate progress. Used real-time weather monitoring to optimize work scheduling.",
     "outcome": "Completed 15 days ahead of schedule. Zero lost-time incidents. Traffic disruption kept under 20% of projected levels.",
     "color": "from-blue-600 to-blue-800",
+    "image": null
+  },
+  {
+    "id": "cs2",
+    "project": "Industrial Complex - Adityapur",
+    "client": "Private Industrial Group",
+    "location": "Adityapur Industrial Area, Jamshedpur",
+    "scope": "Multi-building EPC including factory, warehouse, and admin block",
+    "duration": "Mar 2021 - Aug 2022",
+    "challenge": "Complex coordination between multiple building types with different structural requirements, all on a shared site with active industrial operations nearby.",
+    "approach": "Created a unified project plan with staggered mobilization. Deployed dedicated teams for each building type while sharing equipment across the site. Implemented daily coordination meetings to manage site logistics.",
+    "outcome": "Delivered all three buildings within budget. Client expanded the scope mid-project for additional storage facility, accommodated without timeline impact.",
+    "color": "from-emerald-600 to-emerald-800",
     "image": null
   },
   {
