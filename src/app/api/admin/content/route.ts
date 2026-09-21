@@ -69,9 +69,30 @@ export async function POST(request: Request) {
   const items = await readCurrent(type);
   const isNew = !item.id;
   const id = item.id ?? `${type[0]}${Date.now().toString(36)}`;
-  const record: Item = { ...item, id };
 
   const idx = items.findIndex((i) => i.id === id);
+
+  // Merge onto the stored record rather than replacing it. A browser tab
+  // holds its own copy of the list, so a form opened before some other
+  // change — or a duplicate taken from a stale row — would otherwise write
+  // old values back over newer ones.
+  //
+  // `undefined` fields are dropped outright. `image` additionally ignores an
+  // empty incoming value when one is already stored: a photo is removed via
+  // the uploader's explicit Remove (which sends `imageCleared`), so a bare
+  // null here is always a stale client, never an intent to delete.
+  const incoming = Object.fromEntries(
+    Object.entries(item).filter(([k, v]) => {
+      if (v === undefined) return false;
+      if (k === "image" && v == null && idx >= 0 && items[idx].image && !item.imageCleared) {
+        return false;
+      }
+      return k !== "imageCleared";
+    }),
+  );
+  const record: Item =
+    idx >= 0 ? { ...items[idx], ...incoming, id } : { ...incoming, id };
+
   if (idx >= 0) items[idx] = record;
   else items.unshift(record); // newest first
 
@@ -84,7 +105,7 @@ export async function POST(request: Request) {
       items,
       `${isNew ? "Add" : "Update"} ${type.replace("-", " ")}: ${label}`,
     );
-    return NextResponse.json({ ok: true, id, ...result });
+    return NextResponse.json({ ok: true, id, item: record, ...result });
   } catch (err) {
     return NextResponse.json({ error: (err as Error).message }, { status: 502 });
   }

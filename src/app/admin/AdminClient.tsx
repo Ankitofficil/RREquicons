@@ -71,7 +71,7 @@ export function AdminClient({
         body: JSON.stringify({ type: tab, item }),
       });
       const data = (await res.json()) as {
-        id?: string; error?: string; committed?: boolean;
+        id?: string; error?: string; committed?: boolean; item?: Draft;
       };
       if (!res.ok) {
         flash("err", data.error ?? "Could not save.");
@@ -79,7 +79,9 @@ export function AdminClient({
       }
 
       const [list, setList] = lists[tab];
-      const saved = { ...item, id: data.id };
+      // Use the server's merged record, not the form draft — the server
+      // merges onto what is stored, so this is the authoritative version.
+      const saved = data.item ?? { ...item, id: data.id };
       const idx = list.findIndex((i) => i.id === data.id);
       setList(idx >= 0
         ? list.map((i) => (i.id === data.id ? saved : i))
@@ -154,8 +156,12 @@ export function AdminClient({
   }
 
   function duplicate(item: Draft) {
-    const { id: _ignored, ...rest } = item;
+    // Drop the id so it saves as a new record, and the photo with it: the
+    // copy is a different project, and carrying the original's image (or a
+    // stale null) would otherwise be written onto whatever it overwrites.
+    const { id: _ignored, image: _img, ...rest } = item;
     void _ignored;
+    void _img;
     const copy: Draft = { ...rest };
     const key = "name" in copy ? "name" : "project" in copy ? "project" : "title";
     copy[key] = `${copy[key] as string} (copy)`;

@@ -181,7 +181,9 @@ export function ItemForm({
             <ImageUploader
               kind={config.image}
               value={draft.image as string | null}
-              onChange={(p) => set("image", p)}
+              onChange={(p) =>
+                setDraft((d) => ({ ...d, image: p, imageCleared: p === null }))
+              }
             />
           </div>
         </div>
