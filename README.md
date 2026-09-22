@@ -44,7 +44,7 @@ host's environment before the build.
 
 ## Admin panel
 
-Projects, case studies and insights are edited at `/admin` — see
+Projects, case studies, insights and team members are edited at `/admin` — see
 **[ADMIN.md](ADMIN.md)**. Content lives in `content/*.json` and is committed
 back to GitHub by the panel, so edits survive redeploys.
 
@@ -54,7 +54,7 @@ back to GitHub by the panel, so edits survive redeploys.
 src/app/(site)/   public pages
 src/app/admin/    admin panel
 src/app/api/      contact form + admin endpoints
-content/          project / case-study / insight JSON
+content/          project / case-study / insight / leadership JSON
 src/proxy.ts      auth gate for /admin
 src/components/   shared UI (Navbar, Footer, ContactForm, …)
 src/lib/site.ts   single source of truth for contact details + site URL

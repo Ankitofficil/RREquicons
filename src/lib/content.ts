@@ -1,6 +1,12 @@
 import { promises as fs } from "node:fs";
 import path from "node:path";
-import { CONTENT_FILES, type Project, type CaseStudy, type Insight } from "./content-types";
+import {
+  CONTENT_FILES,
+  type Project,
+  type CaseStudy,
+  type Insight,
+  type Leader,
+} from "./content-types";
 
 // Server-only content loading. Content lives as JSON in /content and images in
 // /public/uploads; the admin panel commits changes back to GitHub, which
@@ -26,5 +32,6 @@ async function readJson<T>(file: string): Promise<T[]> {
 export const getProjects = () => readJson<Project>("projects.json");
 export const getCaseStudies = () => readJson<CaseStudy>("case-studies.json");
 export const getInsights = () => readJson<Insight>("insights.json");
+export const getLeadership = () => readJson<Leader>("leadership.json");
 
 export { CONTENT_FILES };

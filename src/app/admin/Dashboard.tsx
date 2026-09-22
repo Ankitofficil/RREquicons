@@ -21,17 +21,19 @@ export function Dashboard({
   projects,
   caseStudies,
   insights,
+  leadership,
   github,
   onGo,
 }: {
   projects: Draft[];
   caseStudies: Draft[];
   insights: Draft[];
+  leadership: Draft[];
   github: { ok: boolean; message: string };
   onGo: (tab: TabId, filter?: string) => void;
 }) {
   const ongoing = projects.filter((p) => p.status === "Ongoing").length;
-  const all = [...projects, ...caseStudies, ...insights];
+  const all = [...projects, ...caseStudies, ...insights, ...leadership];
   const missingPhotos = all.filter((i) => !i.image);
 
   const cards = [

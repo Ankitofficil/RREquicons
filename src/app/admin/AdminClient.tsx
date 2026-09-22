@@ -33,25 +33,30 @@ const subtitleOf = (t: TabId, i: Draft) =>
     ? [i.client, i.location, i.year].filter(Boolean).join(" · ")
     : t === "case-studies"
       ? [i.client, i.duration].filter(Boolean).join(" · ")
-      : [i.category, i.date].filter(Boolean).join(" · ");
+      : t === "leadership"
+        ? (i.role as string) ?? ""
+        : [i.category, i.date].filter(Boolean).join(" · ");
 
-const LIST_TABS: TabId[] = ["projects", "case-studies", "insights"];
+const LIST_TABS: TabId[] = ["projects", "case-studies", "insights", "leadership"];
 
 export function AdminClient({
   initialProjects,
   initialCaseStudies,
   initialInsights,
+  initialLeadership,
   github,
 }: {
   initialProjects: Draft[];
   initialCaseStudies: Draft[];
   initialInsights: Draft[];
+  initialLeadership: Draft[];
   github: { ok: boolean; message: string };
 }) {
   const [tab, setTab] = useState<TabId>("dashboard");
   const [projects, setProjects] = useState<Draft[]>(initialProjects);
   const [caseStudies, setCaseStudies] = useState<Draft[]>(initialCaseStudies);
   const [insights, setInsights] = useState<Draft[]>(initialInsights);
+  const [leadership, setLeadership] = useState<Draft[]>(initialLeadership);
   const [editing, setEditing] = useState<Draft | null>(null);
   const [query, setQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState("All");
@@ -69,14 +74,18 @@ export function AdminClient({
     projects: [projects, setProjects],
     "case-studies": [caseStudies, setCaseStudies],
     insights: [insights, setInsights],
+    leadership: [leadership, setLeadership],
   };
 
   // Update a list from inside an async callback, where the captured `lists`
   // snapshot would otherwise be stale.
   function setLive(t: TabId, fn: (cur: Draft[]) => Draft[]) {
-    const setter = { projects: setProjects, "case-studies": setCaseStudies, insights: setInsights }[
-      t as "projects" | "case-studies" | "insights"
-    ];
+    const setter = {
+      projects: setProjects,
+      "case-studies": setCaseStudies,
+      insights: setInsights,
+      leadership: setLeadership,
+    }[t as "projects" | "case-studies" | "insights" | "leadership"];
     setter?.((cur: Draft[]) => fn(cur));
   }
 
@@ -286,6 +295,7 @@ export function AdminClient({
     projects: projects.length,
     "case-studies": caseStudies.length,
     insights: insights.length,
+    leadership: leadership.length,
   } as Partial<Record<TabId, number>>;
 
   const goTo = (t: TabId) => {
@@ -337,6 +347,7 @@ export function AdminClient({
           projects={projects}
           caseStudies={caseStudies}
           insights={insights}
+          leadership={leadership}
           github={github}
           onGo={goTo}
         />

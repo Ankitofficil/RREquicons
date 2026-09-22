@@ -1,4 +1,9 @@
-import { getProjects, getCaseStudies, getInsights } from "@/lib/content";
+import {
+  getProjects,
+  getCaseStudies,
+  getInsights,
+  getLeadership,
+} from "@/lib/content";
 import { checkAccess } from "@/lib/admin/github";
 import { AdminClient } from "./AdminClient";
 
@@ -6,10 +11,11 @@ import { AdminClient } from "./AdminClient";
 export const dynamic = "force-dynamic";
 
 export default async function AdminPage() {
-  const [projects, caseStudies, insights, github] = await Promise.all([
+  const [projects, caseStudies, insights, leadership, github] = await Promise.all([
     getProjects(),
     getCaseStudies(),
     getInsights(),
+    getLeadership(),
     checkAccess(),
   ]);
 
@@ -18,6 +24,7 @@ export default async function AdminPage() {
       initialProjects={projects as unknown as Record<string, unknown>[]}
       initialCaseStudies={caseStudies as unknown as Record<string, unknown>[]}
       initialInsights={insights as unknown as Record<string, unknown>[]}
+      initialLeadership={leadership as unknown as Record<string, unknown>[]}
       github={github}
     />
   );

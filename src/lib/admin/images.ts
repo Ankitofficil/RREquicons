@@ -5,6 +5,7 @@
 //   16:9  — the standard for project/editorial cards and hero imagery
 //   4:3   — case study documentation photos (what site cameras produce)
 //   1.91:1 — the Open Graph / social preview ratio (1200x630)
+//   3:4   — portrait, the convention for headshots
 //
 // Uploads are resized and re-encoded server-side, so an admin can drop in a
 // 12 MP phone photo and the site still serves a sensibly sized WebP.
@@ -38,6 +39,13 @@ export const IMAGE_SPECS = {
     ratioLabel: "16:9",
     width: 1600,
     height: 900,
+  },
+  leader: {
+    label: "Portrait",
+    ratio: 3 / 4,
+    ratioLabel: "3:4",
+    width: 900,
+    height: 1200,
   },
   social: {
     label: "Social preview",

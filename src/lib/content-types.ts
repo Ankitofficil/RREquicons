@@ -39,6 +39,14 @@ export interface Insight {
   image?: string | null;
 }
 
+export interface Leader {
+  id: string;
+  name: string;
+  role: string;
+  bio: string;
+  image?: string | null;
+}
+
 export const PROJECT_CATEGORIES = [
   "EPC",
   "Roads & Highways",
@@ -61,6 +69,7 @@ export const CONTENT_FILES = {
   projects: "content/projects.json",
   "case-studies": "content/case-studies.json",
   insights: "content/insights.json",
+  leadership: "content/leadership.json",
 } as const;
 
 export type ContentType = keyof typeof CONTENT_FILES;

@@ -8,6 +8,7 @@ import {
   Newspaper,
   Settings,
   LayoutDashboard,
+  Users,
   Sun,
   Moon,
   ExternalLink,
@@ -18,6 +19,7 @@ const TABS = [
   { id: "projects", label: "Projects", icon: HardHat },
   { id: "case-studies", label: "Case Studies", icon: FileText },
   { id: "insights", label: "Insights", icon: Newspaper },
+  { id: "leadership", label: "Leadership", icon: Users },
   { id: "settings", label: "Settings", icon: Settings },
 ] as const;
 

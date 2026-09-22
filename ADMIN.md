@@ -1,7 +1,8 @@
 # Admin panel
 
-Add and edit projects, case studies and insights — including photos — at
-**`/admin`**, without touching code.
+Add and edit projects, case studies, insights and team members — including
+photos — at **`/admin`**, without touching code. The Leadership tab controls
+who appears on `/about/leadership`.
 
 ## How it works
 
@@ -53,6 +54,7 @@ visitors at full size:
 | Where            | Ratio  | Stored size |
 | ---------------- | ------ | ----------- |
 | Project photos   | 16:9   | 1600×900    |
+| Team portraits   | 3:4    | 900×1200    |
 | Case study photos| 4:3    | 1600×1200   |
 | Article images   | 16:9   | 1600×900    |
 | Social previews  | 1.91:1 | 1200×630    |

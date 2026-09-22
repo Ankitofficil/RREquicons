@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import { User, Users } from "lucide-react";
+import { getLeadership } from "@/lib/content";
 import HeroSection from "@/components/HeroSection";
 import SectionHeading from "@/components/SectionHeading";
 import ScrollReveal from "@/components/ScrollReveal";
@@ -17,14 +19,6 @@ export const metadata: Metadata = {
   },
 };
 
-const directors = [
-  {
-    name: "Mr. Shubham Kamal",
-    role: "Director",
-    bio: "With a strong background in civil engineering and construction management, Mr. Shubham Kamal provides strategic direction and oversees the company's growth trajectory. His hands-on approach ensures that every project meets R R Equicons' exacting standards.",
-    gradient: "from-blue-600/30 to-blue-900/40",
-  },
-];
 
 const managementRoles = [
   "Project Managers with PMP/equivalent certifications",
@@ -36,7 +30,10 @@ const managementRoles = [
   "Procurement & Finance specialists",
 ];
 
-export default function LeadershipPage() {
+export default async function LeadershipPage() {
+  // Managed from the admin panel (Leadership tab).
+  const directors = await getLeadership();
+
   return (
     <>
       <HeroSection title="The People Behind the Projects." compact />
@@ -56,8 +53,20 @@ export default function LeadershipPage() {
             {directors.map((d, i) => (
               <ScrollReveal key={i} delay={i * 150}>
                 <div className="card-premium overflow-hidden">
-                  <div className={`h-52 bg-gradient-to-br ${d.gradient} flex items-center justify-center relative`}>
-                    <User className="w-20 h-20 text-white/10" />
+                  <div className="h-64 bg-gradient-to-br from-blue-600/30 to-blue-900/40 flex items-center justify-center relative">
+                    {d.image ? (
+                      // object-top keeps faces in frame when a 3:4 portrait is
+                      // cropped to this shorter card header.
+                      <Image
+                        src={d.image}
+                        alt={d.name}
+                        fill
+                        sizes="(max-width: 640px) 100vw, 33vw"
+                        className="object-cover object-top"
+                      />
+                    ) : (
+                      <User className="w-20 h-20 text-white/10" />
+                    )}
                     <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
                   </div>
                   <div className="p-6">

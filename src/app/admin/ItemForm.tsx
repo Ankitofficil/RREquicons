@@ -56,6 +56,22 @@ const FIELDS: Record<
       { name: "outcome", label: "Outcome", type: "textarea", full: true, rows: 3, hint: "The result — with numbers where you have them" },
     ],
   },
+  leadership: {
+    noun: "team member",
+    image: "leader",
+    fields: [
+      { name: "name", label: "Name", required: true, hint: "As it should appear — e.g. Mr. Shubham Kamal" },
+      { name: "role", label: "Role", required: true, hint: "e.g. Director, Project Manager" },
+      {
+        name: "bio",
+        label: "Biography",
+        type: "textarea",
+        full: true,
+        rows: 5,
+        hint: "Background, experience, and what they are responsible for",
+      },
+    ],
+  },
   insights: {
     noun: "insight",
     image: "insight",
