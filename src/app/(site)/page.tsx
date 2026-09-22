@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import Image from "next/image";
+import { getProjects } from "@/lib/content";
 import Link from "next/link";
 import {
   Building2,
@@ -32,6 +34,17 @@ import { site } from "@/lib/site";
 
 // The root layout supplies the title/description/OG for this page; only the
 // canonical is page-specific.
+// Fallback tints when a project has no photo, so the grid still reads as a
+// set rather than six identical grey boxes.
+const cardTints = [
+  "from-blue-600/30 to-blue-900/40",
+  "from-emerald-600/30 to-emerald-900/40",
+  "from-amber-600/30 to-amber-900/40",
+  "from-purple-600/30 to-purple-900/40",
+  "from-rose-600/30 to-rose-900/40",
+  "from-cyan-600/30 to-cyan-900/40",
+];
+
 export const metadata: Metadata = {
   alternates: { canonical: "/" },
 };
@@ -106,14 +119,6 @@ const industries = [
   { icon: Pickaxe, label: "Mining & Heavy Industry" },
 ];
 
-const featuredProjects = [
-  { name: "State Highway NH-33 Extension", location: "Jharkhand", scope: "Road Construction - 24 km", status: "Completed", color: "from-blue-600/30 to-blue-900/40" },
-  { name: "Industrial Complex - Adityapur", location: "Jamshedpur", scope: "Multi-building EPC", status: "Completed", color: "from-emerald-600/30 to-emerald-900/40" },
-  { name: "Residential Township - Phase I", location: "Jamshedpur", scope: "120 Unit Housing", status: "Ongoing", color: "from-amber-600/30 to-amber-900/40" },
-  { name: "Bridge Construction - Subarnarekha", location: "Jharkhand", scope: "RCC Bridge - 180m", status: "Completed", color: "from-purple-600/30 to-purple-900/40" },
-  { name: "Batching Plant Setup", location: "Gamharia", scope: "60 m³/hr RMC Plant", status: "Completed", color: "from-rose-600/30 to-rose-900/40" },
-  { name: "Commercial Office Complex", location: "Bistupur", scope: "G+5 Commercial Building", status: "Ongoing", color: "from-cyan-600/30 to-cyan-900/40" },
-];
 
 const testimonials = [
   {
@@ -141,7 +146,11 @@ const enquiryFields = [
   { name: "description", label: "Grade / Quantity / Site (for RMC) or project details", type: "textarea" as const, required: false, placeholder: "e.g. M25, 40 m³, site at Adityapur — pour on 25th" },
 ];
 
-export default function HomePage() {
+export default async function HomePage() {
+  // Same source as /projects and the admin panel, so photos added there
+  // appear here too.
+  const featuredProjects = (await getProjects()).slice(0, 6);
+
   return (
     <>
       {/* ═══ HERO — RMC-forward ═══ */}
@@ -461,8 +470,18 @@ export default function HomePage() {
             {featuredProjects.map((project, i) => (
               <ScrollReveal key={i} delay={i * 100}>
                 <div className="group rounded-2xl overflow-hidden bg-white/[0.03] border border-white/[0.06] hover:border-accent/20 hover:bg-white/[0.06] transition-all h-full">
-                  <div className={`h-44 bg-gradient-to-br ${project.color} flex items-center justify-center relative`}>
-                    <Building2 className="w-14 h-14 text-white/10" />
+                  <div className={`h-44 bg-gradient-to-br ${cardTints[i % cardTints.length]} flex items-center justify-center relative`}>
+                    {project.image ? (
+                      <Image
+                        src={project.image}
+                        alt={project.name}
+                        fill
+                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                        className="object-cover"
+                      />
+                    ) : (
+                      <Building2 className="w-14 h-14 text-white/10" />
+                    )}
                     <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
                     <div className="absolute bottom-3 left-4 right-4 flex items-center justify-between">
                       <span className={`text-[10px] font-bold px-2.5 py-1 rounded-full ${

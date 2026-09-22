@@ -3,7 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useState, useEffect } from "react";
-import { Menu, X, ChevronDown, Phone, ArrowRight, MessageCircle } from "lucide-react";
+import { Menu, X, ChevronDown, Phone, ArrowRight, MessageCircle, Lock } from "lucide-react";
 import { site } from "@/lib/site";
 import ThemeToggle from "@/components/ThemeToggle";
 
@@ -290,6 +290,17 @@ export default function Navbar() {
           <div className="border-t border-white/5 pt-3 mt-3 space-y-1">
             <Link href="/careers" className="block py-3 text-white/90 hover:text-white text-sm font-semibold" onClick={() => setMobileOpen(false)}>Careers</Link>
             <Link href="/contact" className="block py-3 text-white/90 hover:text-white text-sm font-semibold" onClick={() => setMobileOpen(false)}>Contact</Link>
+
+            {/* Staff link, set apart from the customer-facing nav. The panel
+                is password protected and marked noindex. */}
+            <Link
+              href="/admin"
+              className="mt-3 pt-3 border-t border-white/10 flex items-center gap-2 py-3 text-white/40 hover:text-white/70 text-sm transition-colors"
+              onClick={() => setMobileOpen(false)}
+            >
+              <Lock className="w-3.5 h-3.5" />
+              Admin
+            </Link>
           </div>
         </div>
 

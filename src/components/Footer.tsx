@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import { MapPin, Phone, Mail, ArrowRight, MessageCircle } from "lucide-react";
+import { MapPin, Phone, Mail, ArrowRight, MessageCircle, Lock } from "lucide-react";
 import { site } from "@/lib/site";
 
 const socialLinks = [
@@ -154,6 +154,16 @@ export default function Footer() {
               <Link href="#" className="hover:text-white/50 transition-colors">Privacy Policy</Link>
               <Link href="#" className="hover:text-white/50 transition-colors">Terms of Service</Link>
               <Link href="#" className="hover:text-white/50 transition-colors">Sitemap</Link>
+              {/* Staff link. Deliberately understated — the panel is password
+                  protected, and search engines are told not to index it. */}
+              <Link
+                href="/admin"
+                className="inline-flex items-center gap-1 hover:text-white/50 transition-colors"
+                title="Staff login"
+              >
+                <Lock className="w-3 h-3" />
+                Admin
+              </Link>
             </div>
           </div>
         </div>
