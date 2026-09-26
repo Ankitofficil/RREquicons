@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { StructuredData, breadcrumbs } from "@/components/StructuredData";
 import { CheckCircle, Bell } from "lucide-react";
 import HeroSection from "@/components/HeroSection";
 import SectionHeading from "@/components/SectionHeading";
@@ -35,6 +36,7 @@ const interestFields = [
 export default function RealEstatePage() {
   return (
     <>
+      <StructuredData data={breadcrumbs([{ name: "Services", path: "/services/real-estate" }, { name: "Real Estate", path: "/services/real-estate" }])} />
       <HeroSection title="Building Spaces Where Lives Happen." compact />
 
       <section className="py-14 sm:py-24 bg-page construction-grid">

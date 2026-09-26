@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { StructuredData, breadcrumbs } from "@/components/StructuredData";
 import { getCaseStudies } from "@/lib/content";
 import { MapPin, Calendar, Target, CheckCircle } from "lucide-react";
 import HeroSection from "@/components/HeroSection";
@@ -23,6 +24,7 @@ export default async function CaseStudiesPage() {
   const caseStudies = await getCaseStudies();
   return (
     <>
+      <StructuredData data={breadcrumbs([{ name: "Projects", path: "/projects" }, { name: "Case Studies", path: "/projects/case-studies" }])} />
       <HeroSection
         title="Proof, Not Promises."
         subtitle="The best way to understand what we do is to see how we've done it before."

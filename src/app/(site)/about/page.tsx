@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { StructuredData, breadcrumbs } from "@/components/StructuredData";
 import Link from "next/link";
 import { Calendar, Users, Layers, MapPin, ArrowRight } from "lucide-react";
 import HeroSection from "@/components/HeroSection";
@@ -28,6 +29,7 @@ const numbers = [
 export default function AboutPage() {
   return (
     <>
+      <StructuredData data={breadcrumbs([{ name: "About", path: "/about" }])} />
       <HeroSection title="A Decade of Building Trust, One Project at a Time." compact />
 
       <section className="py-14 sm:py-24 bg-page construction-grid">

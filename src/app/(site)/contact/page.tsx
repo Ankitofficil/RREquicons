@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
+import { StructuredData, breadcrumbs } from "@/components/StructuredData";
+import { site, siteUrl } from "@/lib/site";
 import { MapPin, Phone, Mail, Clock, MessageCircle, ArrowUpRight } from "lucide-react";
 import HeroSection from "@/components/HeroSection";
 import SectionHeading from "@/components/SectionHeading";
 import ContactForm from "@/components/ContactForm";
 import ScrollReveal from "@/components/ScrollReveal";
-import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Contact Us",
@@ -61,9 +62,32 @@ const formFields = [
   { name: "message", label: "Message", type: "textarea" as const, required: true, placeholder: "Tell us about your requirement..." },
 ];
 
+const schema = {
+  "@context": "https://schema.org",
+  "@type": "ContactPage",
+  name: "Contact R R Equicons",
+  url: `${siteUrl}/contact`,
+  mainEntity: {
+    "@type": "GeneralContractor",
+    name: site.name,
+    telephone: `+${site.phoneE164}`,
+    email: site.email.general,
+    address: {
+      "@type": "PostalAddress",
+      streetAddress: site.address.lines.slice(0, 3).join(", "),
+      addressLocality: "Jamshedpur",
+      addressRegion: "Jharkhand",
+      postalCode: "831006",
+      addressCountry: "IN",
+    },
+  },
+};
+
 export default function ContactPage() {
   return (
     <>
+      <StructuredData data={schema} />
+      <StructuredData data={breadcrumbs([{ name: "Contact", path: "/contact" }])} />
       <HeroSection
         title="Let's Talk About Your Project."
         subtitle="Whether you're planning a major infrastructure project, need ready-mix concrete, or just want to learn more about working with us — we'd love to hear from you."

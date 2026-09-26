@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { StructuredData, breadcrumbs } from "@/components/StructuredData";
 import { Eye, Target, Heart } from "lucide-react";
 import HeroSection from "@/components/HeroSection";
 import ScrollReveal from "@/components/ScrollReveal";
@@ -28,6 +29,7 @@ const values = [
 export default function VisionMissionPage() {
   return (
     <>
+      <StructuredData data={breadcrumbs([{ name: "About", path: "/about" }, { name: "Vision & Mission", path: "/about/vision-mission" }])} />
       <HeroSection title="Vision, Mission & Values" compact />
 
       <section className="py-14 sm:py-24 bg-page construction-grid">

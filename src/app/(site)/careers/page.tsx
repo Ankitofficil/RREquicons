@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { StructuredData, breadcrumbs } from "@/components/StructuredData";
 import Link from "next/link";
 import { Briefcase, TrendingUp, Shield, GraduationCap, Heart, Building2, MapPin, Clock, ArrowRight } from "lucide-react";
 import HeroSection from "@/components/HeroSection";
@@ -50,6 +51,7 @@ const applicationFields = [
 export default function CareersPage() {
   return (
     <>
+      <StructuredData data={breadcrumbs([{ name: "Careers", path: "/careers" }])} />
       <HeroSection
         title="Build a Career as Solid as What We Build."
         subtitle="At R R Equicons, you won't be a cog in a corporate machine. You'll be part of a team where your work is visible, your contribution matters, and your growth is taken seriously."

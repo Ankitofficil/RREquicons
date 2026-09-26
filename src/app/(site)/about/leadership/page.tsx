@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { StructuredData, breadcrumbs } from "@/components/StructuredData";
 import Image from "next/image";
 import { User, Users } from "lucide-react";
 import { getLeadership } from "@/lib/content";
@@ -36,6 +37,7 @@ export default async function LeadershipPage() {
 
   return (
     <>
+      <StructuredData data={breadcrumbs([{ name: "About", path: "/about" }, { name: "Leadership", path: "/about/leadership" }])} />
       <HeroSection title="The People Behind the Projects." compact />
 
       <section className="py-14 sm:py-24 bg-page construction-grid">

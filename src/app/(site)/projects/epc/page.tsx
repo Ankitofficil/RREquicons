@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { StructuredData, breadcrumbs } from "@/components/StructuredData";
 import Link from "next/link";
 import { CheckCircle, Cog, Package, HardHat, FileCheck, ArrowRight } from "lucide-react";
 import HeroSection from "@/components/HeroSection";
@@ -45,6 +46,7 @@ const process = [
 export default function EPCPage() {
   return (
     <>
+      <StructuredData data={breadcrumbs([{ name: "Projects", path: "/projects" }, { name: "EPC", path: "/projects/epc" }])} />
       <HeroSection title="End-to-End EPC. One Team. One Accountability." compact />
 
       <section className="py-14 sm:py-24 bg-page construction-grid">

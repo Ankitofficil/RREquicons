@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { StructuredData, breadcrumbs } from "@/components/StructuredData";
 import { Shield, CheckCircle, Heart, Leaf, Award } from "lucide-react";
 import HeroSection from "@/components/HeroSection";
 import ScrollReveal from "@/components/ScrollReveal";
@@ -46,6 +47,7 @@ const standards = [
 export default function QHSEPage() {
   return (
     <>
+      <StructuredData data={breadcrumbs([{ name: "About", path: "/about" }, { name: "QHSE", path: "/about/qhse" }])} />
       <HeroSection title="Built Right. Built Safe. Built to Last." compact />
 
       <section className="py-14 sm:py-24 bg-page construction-grid">

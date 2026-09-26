@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { StructuredData, breadcrumbs } from "@/components/StructuredData";
 import { Truck, Package, MapPin } from "lucide-react";
 import HeroSection from "@/components/HeroSection";
 import ScrollReveal from "@/components/ScrollReveal";
@@ -24,6 +25,7 @@ const areas = ["Jharkhand", "Bihar", "Odisha", "West Bengal", "PAN India (on req
 export default function TransportPage() {
   return (
     <>
+      <StructuredData data={breadcrumbs([{ name: "Services", path: "/services/transport" }, { name: "Transport & Logistics", path: "/services/transport" }])} />
       <HeroSection title="Heavy Loads. Reliable Delivery." compact />
 
       <section className="py-14 sm:py-24 bg-page construction-grid">

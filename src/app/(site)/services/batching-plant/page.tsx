@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import { StructuredData, breadcrumbs } from "@/components/StructuredData";
+import { site, siteUrl } from "@/lib/site";
 import Link from "next/link";
 import {
   Gauge,
@@ -17,7 +19,6 @@ import {
 import SectionHeading from "@/components/SectionHeading";
 import ScrollReveal from "@/components/ScrollReveal";
 import ContactForm from "@/components/ContactForm";
-import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Ready-Mix Concrete (RMC) in Jamshedpur",
@@ -68,9 +69,26 @@ const rmcFields = [
   { name: "site", label: "Site Location & Pour Date", type: "textarea" as const, required: false, placeholder: "e.g. Adityapur — pour on 25th, morning" },
 ];
 
+const schema = {
+  "@context": "https://schema.org",
+  "@type": "Service",
+  name: "Ready-Mix Concrete (RMC) Supply",
+  serviceType: "Ready-Mix Concrete supply and delivery",
+  provider: { "@type": "GeneralContractor", name: site.name, url: siteUrl },
+  areaServed: [
+    { "@type": "City", name: "Jamshedpur" },
+    { "@type": "State", name: "Jharkhand" },
+  ],
+  description:
+    "Computer-controlled M10\u2013M60+ ready-mix concrete from an owned 60 m\u00b3/hr batching plant, delivered by an owned transit-mixer fleet.",
+  url: `${siteUrl}/services/batching-plant`,
+};
+
 export default function BatchingPlantPage() {
   return (
     <>
+      <StructuredData data={schema} />
+      <StructuredData data={breadcrumbs([{ name: "Services", path: "/services/batching-plant" }, { name: "Ready-Mix Concrete", path: "/services/batching-plant" }])} />
       {/* ═══ HERO ═══ */}
       <section className="relative py-16 sm:py-28 hero-gradient overflow-hidden">
         <div className="absolute inset-0 blueprint-pattern" />

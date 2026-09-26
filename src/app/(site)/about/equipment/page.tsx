@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { StructuredData, breadcrumbs } from "@/components/StructuredData";
 import { Truck, HardHat, Factory, Package, Wrench } from "lucide-react";
 import HeroSection from "@/components/HeroSection";
 import ScrollReveal from "@/components/ScrollReveal";
@@ -26,6 +27,7 @@ const categories = [
 export default function EquipmentPage() {
   return (
     <>
+      <StructuredData data={breadcrumbs([{ name: "About", path: "/about" }, { name: "Equipment", path: "/about/equipment" }])} />
       <HeroSection title="A Fleet Built for Every Challenge." compact />
 
       <section className="py-14 sm:py-24 bg-page construction-grid">

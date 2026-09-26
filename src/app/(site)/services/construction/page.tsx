@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { StructuredData, breadcrumbs } from "@/components/StructuredData";
 import HeroSection from "@/components/HeroSection";
 import SectionHeading from "@/components/SectionHeading";
 import ScrollReveal from "@/components/ScrollReveal";
@@ -29,6 +30,7 @@ const services = [
 export default function ConstructionPage() {
   return (
     <>
+      <StructuredData data={breadcrumbs([{ name: "Services", path: "/services/construction" }, { name: "Civil Construction", path: "/services/construction" }])} />
       <HeroSection title="Civil Construction Done Right." compact />
 
       <section className="py-14 sm:py-24 bg-page construction-grid">

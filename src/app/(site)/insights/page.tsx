@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import { StructuredData, breadcrumbs } from "@/components/StructuredData";
+import { site, siteUrl } from "@/lib/site";
 import { getInsights } from "@/lib/content";
 import { Calendar, ArrowRight, Tag } from "lucide-react";
 import HeroSection from "@/components/HeroSection";
@@ -30,8 +32,32 @@ const colorMap: Record<string, string> = {
 
 export default async function InsightsPage() {
   const posts = await getInsights();
+
+  // An ItemList of the articles, so search engines can see this as a
+  // publication index rather than one undifferentiated page.
+  const listSchema = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name: "Insights & News",
+    itemListElement: posts.map((p, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      item: {
+        "@type": "Article",
+        headline: p.title,
+        description: p.excerpt,
+        articleSection: p.category,
+        ...(p.image ? { image: `${siteUrl}${p.image}` } : {}),
+        author: { "@type": "Organization", name: site.name },
+        publisher: { "@type": "Organization", name: site.name },
+      },
+    })),
+  };
+
   return (
     <>
+      <StructuredData data={breadcrumbs([{ name: "Insights", path: "/insights" }])} />
+      <StructuredData data={listSchema} />
       <HeroSection
         title="Insights & News"
         subtitle="Industry trends, project stories, technical knowledge, and updates from R R Equicons."
